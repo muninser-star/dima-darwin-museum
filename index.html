@@ -167,6 +167,12 @@
   .qfinal{display:none;background:var(--ink);color:var(--paper);border-radius:14px;padding:18px 20px;font-size:calc(16px*var(--scale));font-weight:700;}
   .qfinal.show{display:block;}
   @media (max-width:520px){.qopt img{height:92px;} .qopt span{font-size:calc(12.5px*var(--scale));padding:7px 4px;}}
+
+  /* ---------- ДОБАВЛЕНО: рисованные сцены истории ---------- */
+  .scene{width:100%;height:auto;aspect-ratio:16/9;display:block;border-radius:10px;border:1px solid var(--rule);background:var(--paper);margin:0 0 12px;}
+  .scene text{font-family:var(--body);}
+  .place{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:calc(12.5px*var(--scale));color:var(--soft);line-height:1.35;}
+  .place img{width:92px;height:66px;object-fit:cover;border-radius:8px;border:1px solid var(--rule);flex:0 0 auto;}
 </style>
 </head>
 <body>
@@ -538,70 +544,295 @@
 <section class="wrap">
   <div class="tag"><span class="num">04</span> Дело</div>
   <h2>Дело о пропавшей спирали</h2>
-  <p class="sub">Инспектор Дима приходит в музей раньше класса — и находит пустую витрину.</p>
+  <p class="sub">Восемь глав. Инспектор Дима приходит в музей раньше класса — и находит пустую витрину.</p>
 
   <div class="story">
 
     <article class="chapter">
       <div class="chn">Глава 1</div>
       <h3>Пустая витрина</h3>
-      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%97%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5._2021_18.jpg?width=900" alt="Здание Дарвиновского музея" loading="lazy" onerror="this.style.display='none'">
-      <p class="lede">Инспектор Дима вошёл во двор Дарвиновского музея на пятнадцать минут раньше класса. На ограде блестела знакомая спираль — значок музея, аммонит. «Где-то внутри лежит настоящий», — подумал Дима и пошёл искать.</p>
-      <p>Витрину он нашёл на первом этаже. Табличка была на месте: «Аммонит». Подставка была на месте. Аммонита не было. На тёмном бархате остался круглый отпечаток — и три жёлтые песчинки.</p>
-      <p>Дима достал из кармана билет, аккуратно смахнул на него одну песчинку и убрал в карман. Первая улика есть.</p>
-      <p class="hook">🔎 На месте: найди спираль-аммонит на эмблеме музея — она встретится тебе ещё на ограде парка рядом.</p>
+      <svg class="scene" viewBox="0 0 640 360" role="img" aria-label="Пустая витрина: на бархате круглый след и три песчинки">
+        <rect width="640" height="360" style="fill:var(--paper)"/>
+        <rect x="0" y="286" width="640" height="74" style="fill:var(--bg)"/>
+        <rect x="140" y="44" width="360" height="242" rx="10" stroke-width="7" style="fill:var(--bg);stroke:var(--ink)"/>
+        <rect x="164" y="68" width="312" height="194" rx="6" stroke-width="3" style="fill:var(--paper);stroke:var(--rule)"/>
+        <rect x="196" y="176" width="248" height="70" rx="6" opacity=".85" style="fill:var(--accent-deep)"/>
+        <ellipse cx="320" cy="188" rx="46" ry="14" fill="none" stroke-width="5" stroke-dasharray="9 8" style="stroke:var(--gold)"/>
+        <circle cx="286" cy="216" r="5" style="fill:var(--gold)"/><circle cx="322" cy="226" r="4" style="fill:var(--gold)"/><circle cx="356" cy="212" r="5" style="fill:var(--gold)"/>
+        <rect x="262" y="98" width="116" height="34" rx="5" stroke-width="3" style="fill:var(--paper);stroke:var(--rule)"/>
+        <text x="320" y="121" text-anchor="middle" font-size="19" font-weight="700" style="font-family:var(--body);fill:var(--ink)">АММОНИТ</text>
+        <g stroke-width="8" fill="none" stroke-linecap="round" style="stroke:var(--accent)">
+          <circle cx="552" cy="196" r="40"/><line x1="524" y1="226" x2="494" y2="258"/>
+        </g>
+        <circle cx="552" cy="196" r="32" opacity=".5" style="fill:var(--paper)"/>
+      </svg>
+      <p class="lede">Автобус с классом опаздывал, и инспектор Дима вошёл во двор музея на пятнадцать минут раньше всех. На воротах блестела знакомая спираль — эмблема музея, закрученная раковина аммонита. «Где-то внутри должен лежать настоящий», — решил Дима и пошёл искать.</p>
+      <p>Витрину он нашёл быстро, на первом этаже, между слоном и моржом. Табличка была на месте: «АММОНИТ». Подставка была на месте. Самого аммонита не было.</p>
+      <p>Дима подошёл вплотную и упёрся носом в стекло. На тёмном бархате остался круглый след — там, где раковина лежала так долго, что примяла ворс. Рядом со следом блестели три жёлтые песчинки. Откуда в закрытой витрине песок?</p>
+      <p>Он достал из кармана свой билет, аккуратно смахнул на него одну песчинку и сложил билет пополам. Первая улика поехала в карман. Дело открыто.</p>
+      <p class="hook">🔎 На месте: найди спираль-аммонит на эмблеме музея — она есть у входа, на табличках и даже на ограде соседнего парка.</p>
+      <div class="place"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%97%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5._2021_18.jpg?width=900" alt="Здание Дарвиновского музея" loading="lazy" onerror="this.style.display='none'"><span>Настоящее место действия: главный вход Дарвиновского музея</span></div>
     </article>
 
     <article class="chapter">
       <div class="chn">Глава 2</div>
       <h3>Дорожка из песчинок</h3>
-      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_050.JPG?width=900" alt="Зал Дарвиновского музея" loading="lazy" onerror="this.style.display='none'">
-      <p class="lede">Дима присел на корточки — снизу зал выглядит совсем иначе. По полу тянулась редкая дорожка из таких же жёлтых песчинок. Она уходила мимо белки-альбиноса, мимо лис всех цветов и упиралась в лестницу.</p>
-      <p>На лестнице дорожка раздваивалась: часть песчинок вела вверх, на третий этаж, к тарбозавру, часть — вниз, во двор, к мамонту.</p>
+      <svg class="scene" viewBox="0 0 640 360" role="img" aria-label="Мальчик на корточках разглядывает дорожку из песчинок на полу">
+        <rect width="640" height="360" style="fill:var(--paper)"/>
+        <rect x="0" y="0" width="640" height="196" style="fill:var(--bg)"/>
+        <rect x="60" y="40" width="120" height="150" rx="8" stroke-width="4" style="fill:var(--paper);stroke:var(--rule)"/>
+        <rect x="212" y="56" width="104" height="134" rx="8" stroke-width="4" style="fill:var(--paper);stroke:var(--rule)"/>
+        <circle cx="264" cy="120" r="30" opacity=".7" style="fill:var(--rule)"/>
+        <rect x="352" y="40" width="120" height="150" rx="8" stroke-width="4" style="fill:var(--paper);stroke:var(--rule)"/>
+        <circle cx="112" cy="120" r="26" stroke-width="4" style="fill:var(--paper);stroke:var(--soft)"/>
+        <path d="M508 190 v-150 h72 v150" fill="none" stroke-width="6" style="stroke:var(--ink)"/>
+        <path d="M520 190 l0 -40 l24 -22 l24 22 l0 40" opacity=".18" style="fill:var(--ink)"/>
+        <g style="fill:var(--gold)">
+          <circle cx="196" cy="266" r="6"/><circle cx="244" cy="276" r="5"/><circle cx="292" cy="264" r="6"/><circle cx="340" cy="274" r="5"/><circle cx="388" cy="262" r="6"/><circle cx="436" cy="272" r="5"/><circle cx="484" cy="258" r="6"/><circle cx="528" cy="266" r="5"/>
+        </g>
+        <g style="fill:var(--ink)">
+          <circle cx="96" cy="212" r="27"/>
+          <path d="M70 246 q26 -12 52 0 l10 44 q-36 12 -72 0 z"/>
+          <rect x="66" y="288" width="74" height="20" rx="10"/>
+          <rect x="120" y="252" width="18" height="46" rx="9" transform="rotate(28 129 275)"/>
+        </g>
+        <g stroke-width="7" fill="none" stroke-linecap="round" style="stroke:var(--accent)">
+          <circle cx="168" cy="286" r="24"/><line x1="152" y1="270" x2="140" y2="258"/>
+        </g>
+      </svg>
+      <p class="lede">Дима присел на корточки — снизу зал выглядит совсем иначе, и то, что с высоты человеческого роста кажется пылью, вблизи оказывается следом. По полу тянулась редкая дорожка из таких же жёлтых песчинок.</p>
+      <p>Он пополз вдоль неё, стараясь не наступить ни на одну. Дорожка провела его мимо витрины с белкой-альбиносом — совершенно белой, с розовыми глазами. Потом мимо лис: рыжей, серебристой и чёрной, всех одного вида и всех разного цвета. Смотритель зала внимательно посмотрел на ползущего мальчика, но ничего не сказал.</p>
+      <p>Песчинки закончились у самой лестницы. Дима сосчитал их: восемь штук, и все лежат на одинаковом расстоянии друг от друга, будто кто-то ронял их на ходу, шаг за шагом.</p>
+      <p>А на лестнице дорожка раздваивалась. Часть песчинок вела вверх, на третий этаж, где стоит скелет тарбозавра. Часть — вниз, во двор, где мокнет под дождём мамонт.</p>
+      <p class="hook">🔎 На месте: белка-альбинос и разноцветные лисы — 2 этаж, зал «Микроэволюция». Проверь, правда ли от них видно лестницу.</p>
+      <div class="place"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_052.JPG?width=900" alt="Зал Дарвиновского музея" loading="lazy" onerror="this.style.display='none'"><span>Настоящее место действия: залы Дарвиновского музея</span></div>
+    </article>
+
+    <article class="chapter">
+      <div class="chn">Глава 3</div>
+      <h3>Развилка на лестнице</h3>
+      <svg class="scene" viewBox="0 0 640 360" role="img" aria-label="Лестница, на которой дорожка из песчинок расходится вверх и вниз">
+        <rect width="640" height="360" style="fill:var(--paper)"/>
+        <g stroke-width="3" style="fill:var(--bg);stroke:var(--rule)">
+          <rect x="330" y="238" width="90" height="34"/><rect x="374" y="204" width="90" height="34"/><rect x="418" y="170" width="90" height="34"/><rect x="462" y="136" width="90" height="34"/><rect x="506" y="102" width="90" height="34"/>
+        </g>
+        <g stroke-width="3" style="fill:var(--bg);stroke:var(--rule)">
+          <rect x="130" y="272" width="86" height="30"/><rect x="90" y="302" width="86" height="30"/><rect x="50" y="332" width="86" height="28"/>
+        </g>
+        <g style="fill:var(--gold)">
+          <circle cx="368" cy="230" r="6"/><circle cx="412" cy="196" r="6"/><circle cx="456" cy="162" r="6"/><circle cx="500" cy="128" r="6"/><circle cx="544" cy="96" r="6"/>
+          <circle cx="206" cy="266" r="6"/><circle cx="166" cy="296" r="6"/><circle cx="126" cy="326" r="6"/>
+        </g>
+        <g style="fill:var(--ink)">
+          <circle cx="296" cy="182" r="28"/>
+          <path d="M268 218 q28 -12 56 0 l8 78 h-72 z"/>
+          <rect x="262" y="296" width="26" height="52" rx="12"/><rect x="306" y="296" width="26" height="52" rx="12"/>
+        </g>
+                        <text x="470" y="60" text-anchor="middle" font-size="22" font-weight="700" style="font-family:var(--body);fill:var(--accent-deep)">3 этаж</text>
+        <text x="120" y="240" text-anchor="middle" font-size="22" font-weight="700" style="font-family:var(--body);fill:var(--accent-deep)">двор</text>
+      </svg>
+      <p class="lede">Дима остановился на ступеньке и подумал. Наверху, на третьем этаже, стоит тарбозавр — там пусто и тихо, туда почти никто не заходит с утра. Внизу, во дворе, песок: его насыпали вокруг фигур Палеопарка, и жёлтые песчинки наверняка оттуда.</p>
+      <p>Времени до прихода класса оставалось минут десять. На два этажа сразу его не хватит.</p>
       <div class="fork">
         <div class="fq">Как поступишь, инспектор?</div>
         <div class="opts2">
           <button>Подняться наверх, к тарбозавру</button>
           <button>Спуститься во двор, к мамонту</button>
         </div>
-        <div class="branch">Наверху, под лапой тарбозавра, песчинок стало больше — целая горстка. А ещё в пыли отпечатался круглый след с бороздками. Спираль здесь была. И кто-то её нёс дальше — к окну, которое смотрит во двор.</div>
-        <div class="branch">Во дворе Дима сразу увидел, что песок под ногами точно такой же — жёлтый, из-под фигур Палеопарка. Значит, спираль вынесли наружу. Осталось понять кто — и Дима вернулся в дом, чтобы посмотреть на след сверху, из окна третьего этажа.</div>
+        <div class="branch">Дима поднялся на третий этаж, перешагивая через ступеньку. Возле лапы тарбозавра песчинок было уже не три, а целая горстка — будто кто-то остановился здесь и потоптался. А в пыли рядом отпечатался круглый след с бороздками. Спираль тут была совершенно точно, и её несли дальше — к окну.</div>
+        <div class="branch">Дима сбежал во двор. Песок под фигурами Палеопарка оказался точно такой же: жёлтый, крупный, с блёстками. Значит, спираль побывала здесь — но её тут больше нет. Дима задрал голову и увидел на третьем этаже приоткрытую форточку. Пора было подняться и посмотреть на двор оттуда.</div>
       </div>
-      <p class="hook">🔎 На месте: белка-альбинос и разноцветные лисы — 2 этаж, зал «Микроэволюция». Проверь, правда ли от них видно лестницу.</p>
-    </article>
-
-    <article class="chapter">
-      <div class="chn">Глава 3</div>
-      <h3>Зубастый свидетель</h3>
-      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tarbosaurus_mount.jpg?width=900" alt="Скелет тарбозавра" loading="lazy" onerror="this.style.display='none'">
-      <p class="lede">Тарбозавр молчал семьдесят миллионов лет и прекращать не собирался. Но Диме и не нужны были слова. Он смотрел на окно за скелетом: форточка была приоткрыта, и на подоконнике лежало серое пёрышко.</p>
-      <p>Дима сложил всё вместе: песок из двора, круглый след, открытая форточка, перо. Спираль унесли не через двери. Её унесли по воздуху.</p>
-      <p>Он посмотрел вниз, во двор, где стоял мамонт, а рядом росло дерево гинкго с листьями-веерами. На верхней ветке что-то тускло блестело.</p>
-      <p class="hook">🔎 На месте: тарбозавр — 3 этаж, зал «Макроэволюция». Посмотри, какие у него маленькие передние лапы.</p>
+      <p class="hook">🔎 На месте: лестница между этажами — та самая развилка. Поднимись по ней и оглянись, как это делал Дима.</p>
+      <div class="place"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_02.jpg?width=900" alt="Залы музея" loading="lazy" onerror="this.style.display='none'"><span>Настоящее место действия: этажи основной экспозиции</span></div>
     </article>
 
     <article class="chapter">
       <div class="chn">Глава 4</div>
-      <h3>Засада у мамонта</h3>
-      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_mammoth_model_Royal_BC_Museum_in_Victoria.jpg?width=900" alt="Мамонт в натуральную величину" loading="lazy" onerror="this.style.display='none'">
-      <p class="lede">Дима вышел во двор и спрятался за папоротником, у самой ноги мамонта. Отсюда было видно и гинкго, и форточку третьего этажа.</p>
-      <p>Ждать пришлось недолго. С крыши слетела сорока, села на ветку и деловито поправила клювом свою добычу — закрученную спираль аммонита.</p>
-      <p>Гнаться было бессмысленно: птица улетит выше. И Дима сделал по-другому. Он вытащил из кармана блестящую полоску от билета, положил её на пенёк на самом виду, отошёл на пять шагов и замер.</p>
-      <p class="hook">🔎 На месте: гинкго и папоротники в Палеопарке — их посадили специально: такие росли ещё при динозаврах.</p>
+      <h3>Зубастый свидетель</h3>
+      <svg class="scene" viewBox="0 0 640 360" role="img" aria-label="Скелет тарбозавра, рядом окно с приоткрытой форточкой и перо на подоконнике">
+  <rect width="640" height="360" style="fill:var(--paper)"/>
+  <rect x="0" y="300" width="640" height="60" style="fill:var(--bg)"/>
+  <rect x="430" y="34" width="182" height="246" rx="6" style="fill:var(--bg);stroke:var(--ink)" stroke-width="6"/>
+  <line x1="521" y1="34" x2="521" y2="280" style="stroke:var(--ink)" stroke-width="5"/>
+  <path d="M430 34 h91 v58 l-116 8 z" style="fill:var(--paper);stroke:var(--ink)" stroke-width="5"/>
+  <rect x="418" y="280" width="206" height="14" rx="4" style="fill:var(--ink)" opacity=".25"/>
+  <path d="M556 272 q24 -28 42 -8 q-18 18 -42 8 z" style="fill:var(--soft)"/>
+  <line x1="556" y1="272" x2="600" y2="262" style="stroke:var(--ink)" stroke-width="3"/>
+  <g style="fill:var(--ink)">
+    <ellipse cx="228" cy="196" rx="94" ry="50"/>
+    <path d="M150 190 L18 250 L26 274 L162 226 Z"/>
+    <path d="M296 178 q30 -34 58 -46 l22 32 q-30 14 -46 40 z"/>
+    <path d="M338 106 l112 22 l10 42 l-34 22 l-92 -20 l-8 -40 z"/>
+    <path d="M212 226 q40 12 44 52 l-6 34 h-34 l-8 -46 z"/>
+    <rect x="212" y="300" width="58" height="16" rx="7"/>
+    <path d="M268 224 q38 14 40 54 l-6 32 h-32 l-8 -44 z"/>
+    <rect x="264" y="298" width="58" height="16" rx="7"/>
+    <path d="M300 202 q22 6 30 24 l-14 6 q-8 -14 -22 -18 z"/>
+  </g>
+  <g style="fill:var(--paper)">
+    <path d="M352 168 l10 20 l12 -18 z"/><path d="M382 174 l10 20 l12 -18 z"/><path d="M412 178 l9 18 l11 -16 z"/>
+    <circle cx="376" cy="140" r="8"/>
+  </g>
+  <g style="fill:none;stroke:var(--paper)" stroke-width="5" opacity=".55">
+    <path d="M186 156 q16 44 4 84"/><path d="M222 150 q18 46 6 90"/><path d="M258 154 q18 44 4 84"/>
+  </g>
+  <g style="fill:var(--gold)"><circle cx="240" cy="330" r="6"/><circle cx="286" cy="338" r="5"/><circle cx="332" cy="328" r="6"/><circle cx="378" cy="336" r="5"/><circle cx="424" cy="326" r="6"/></g>
+</svg>
+      <p class="lede">Тарбозавр молчал семьдесят миллионов лет и прекращать не собирался. Дима обошёл его кругом, задрав голову: череп у зверя огромный, зубы разной длины, как у пилы, а передние лапы совсем крошечные — короче Диминой руки.</p>
+      <p>Но интересным оказался не скелет, а окно за ним. Форточка была приоткрыта — узкая щель, взрослому не пролезть, а вот кому-нибудь поменьше в самый раз. На подоконнике лежало серое пёрышко с чёрным кончиком.</p>
+      <p>Дима сложил всё вместе, как складывают пазл: песок из двора, круглый след возле лапы, открытая форточка, перо. Получалось, что спираль вынесли из музея не через двери и не мимо охраны. Её унесли по воздуху.</p>
+      <p>Он подошёл к стеклу и посмотрел вниз, во двор. Там, между мамонтом и фигурой ящера с рогами на голове, росло невысокое дерево с листьями-веерами. И на верхней ветке что-то тускло поблёскивало.</p>
+      <p class="hook">🔎 На месте: тарбозавр — 3 этаж, зал «Макроэволюция». Найди у него самые длинные зубы и сравни его передние лапы со своими руками.</p>
+      <div class="place"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tarbosaurus_mount.jpg?width=900" alt="Скелет тарбозавра" loading="lazy" onerror="this.style.display='none'"><span>Настоящее место действия: скелет тарбозавра в музейном зале</span></div>
     </article>
 
     <article class="chapter">
-      <div class="chn">Глава 5 · финал</div>
+      <div class="chn">Глава 5</div>
+      <h3>Что видно из окна</h3>
+      <svg class="scene" viewBox="0 0 640 360" role="img" aria-label="Вид из окна во двор: дерево гинкго с блестящей точкой на ветке и мамонт внизу">
+        <rect width="640" height="360" style="fill:var(--bg)"/>
+        <rect x="40" y="24" width="560" height="312" rx="8" stroke-width="10" style="fill:var(--paper);stroke:var(--ink)"/>
+        <rect x="64" y="240" width="512" height="72" opacity=".22" style="fill:var(--accent)"/>
+        <g stroke-width="12" fill="none" stroke-linecap="round" style="stroke:var(--soft)">
+          <path d="M214 258 v-72"/><path d="M214 206 l-42 -34"/><path d="M214 214 l44 -38"/>
+        </g>
+        <g style="fill:var(--accent-deep)">
+          <path d="M148 172 q24 -30 48 -4 q-24 16 -48 4 z"/><path d="M232 166 q26 -30 50 -2 q-26 16 -50 2 z"/><path d="M186 132 q26 -32 50 -2 q-26 16 -50 2 z"/>
+        </g>
+        <g><circle cx="252" cy="150" r="9" style="fill:var(--gold)"/><path d="M252 128 v-14 M252 186 v14 M230 150 h-14 M274 150 h14" stroke-width="4" stroke-linecap="round" style="stroke:var(--gold)"/></g>
+        <g style="fill:var(--ink)">
+          <path d="M372 262 q10 -56 66 -58 q58 -2 66 54 l6 42 h-26 l-6 -24 h-80 l-6 24 h-26 z"/>
+          <path d="M372 232 q-26 4 -30 26 q16 10 30 -4 z"/>
+          <path d="M348 254 q-22 24 4 40 q10 -16 6 -34 z" stroke-width="4" style="fill:var(--paper);stroke:var(--ink)"/>
+          <path d="M366 250 q-26 26 2 44 q12 -18 6 -38 z" stroke-width="4" style="fill:var(--paper);stroke:var(--ink)"/>
+        </g>
+        <line x1="320" y1="24" x2="320" y2="336" stroke-width="8" style="stroke:var(--ink)"/>
+      </svg>
+      <p class="lede">Из окна третьего этажа двор виден целиком, как макет. Мамонт стоял там, где всегда, — большой, лохматый, с бивнями, закрученными внутрь. Рядом, поодаль, темнели фигуры остальных: килеск, эстемменозух, мастодонзавр.</p>
+      <p>Дерево с листьями-веерами Дима узнал: это гинкго, его посадили во дворе специально, потому что такие деревья росли ещё при динозаврах. Блестело именно на нём — на самой верхней ветке, среди листьев.</p>
+      <p>Дима прищурился. Блестело не стекло и не фольга от конфеты. Блестело что-то круглое, размером с ладонь, и оно было закручено спиралью.</p>
+      <p>Он посмотрел на часы. Класс должен был приехать через пять минут, а от третьего этажа до двора — две минуты бегом.</p>
+      <p class="hook">🔎 На месте: во дворе найди гинкго. Его лист похож на маленький веер, второго такого дерева в парке нет.</p>
+      <div class="place"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_mammoth_model_Royal_BC_Museum_in_Victoria.jpg?width=900" alt="Мамонт в натуральную величину" loading="lazy" onerror="this.style.display='none'"><span>Настоящее место действия: мамонт в Палеопарке, во дворе музея</span></div>
+    </article>
+
+    <article class="chapter">
+      <div class="chn">Глава 6</div>
+      <h3>Засада за папоротником</h3>
+      <svg class="scene" viewBox="0 0 640 360" role="img" aria-label="Мальчик прячется за папоротником и наблюдает за сорокой на дереве">
+        <rect width="640" height="360" style="fill:var(--paper)"/>
+        <rect x="0" y="286" width="640" height="74" opacity=".2" style="fill:var(--accent)"/>
+        <g stroke-width="10" fill="none" stroke-linecap="round" style="stroke:var(--soft)"><path d="M470 290 v-96"/><path d="M470 224 l-40 -30"/><path d="M470 236 l42 -34"/></g>
+        <g style="fill:var(--accent-deep)"><path d="M408 194 q24 -28 46 -4 q-22 16 -46 4 z"/><path d="M490 190 q24 -28 46 -4 q-22 16 -46 4 z"/></g>
+        <g transform="translate(506 154)">
+          <ellipse cx="0" cy="0" rx="24" ry="14" style="fill:var(--ink)"/>
+          <path d="M18 6 l44 26 l-40 -6 z" style="fill:var(--ink)"/>
+          <circle cx="-20" cy="-8" r="11" style="fill:var(--ink)"/>
+          <path d="M-30 -8 l-14 4 l14 5 z" style="fill:var(--gold)"/>
+          <ellipse cx="2" cy="4" rx="10" ry="6" style="fill:var(--paper)"/>
+          <circle cx="-23" cy="-11" r="2.4" style="fill:var(--paper)"/>
+        </g>
+        <g style="fill:var(--ink)">
+          <circle cx="188" cy="176" r="30"/>
+          <path d="M158 214 q30 -14 60 0 l10 78 h-80 z"/>
+        </g>
+        <g stroke-width="9" fill="none" stroke-linecap="round" style="stroke:var(--accent-deep)">
+          <path d="M120 350 q6 -110 -34 -164"/><path d="M120 350 q-22 -104 -84 -140"/><path d="M120 350 q40 -104 116 -132"/><path d="M120 350 q30 -116 6 -172"/>
+        </g>
+        <g opacity=".85" style="fill:var(--accent)">
+          <path d="M86 186 q22 -22 40 -2 q-20 14 -40 2 z"/><path d="M36 210 q22 -22 40 -2 q-20 14 -40 2 z"/><path d="M126 178 q22 -22 40 -2 q-20 14 -40 2 z"/><path d="M196 218 q22 -22 40 -2 q-20 14 -40 2 z"/>
+        </g>
+        <circle cx="176" cy="170" r="4" style="fill:var(--paper)"/><circle cx="200" cy="170" r="4" style="fill:var(--paper)"/>
+      </svg>
+      <p class="lede">Дима сбежал по лестнице, вышел во двор и не побежал к дереву. Он сделал наоборот: тихо-тихо обошёл площадку по краю, присел за высоким папоротником у самой ноги мамонта и замер. Отсюда было видно и гинкго, и форточку третьего этажа.</p>
+      <p>Ждать пришлось недолго. С крыши музея слетела птица — чёрная, с белым брюхом и длинным хвостом, сорока. Она села на верхнюю ветку, поправила клювом свою добычу, и Дима наконец разглядел её как следует.</p>
+      <p>Это был он. Настоящий аммонит, спираль размером с ладонь, с перламутровым отливом. Сорока держала его в лапе и была очень довольна.</p>
+      <p>Гнаться было бесполезно: птица просто взлетит выше, и всё. Нужно было придумать что-то другое.</p>
+      <div class="fork">
+        <div class="fq">Что сделаешь, инспектор?</div>
+        <div class="opts2">
+          <button>Сидеть тихо и ждать, пока улетит</button>
+          <button>Выманить сороку блестящей штукой</button>
+        </div>
+        <div class="branch">Дима просидел за папоротником ещё пять минут, не шевелясь. Сорока успокоилась, спрятала аммонит в развилку веток — и улетела за новой добычей. Теперь Дима знал главное: спираль лежит в дереве и никуда не денется. Осталось до неё добраться — а гинкго во дворе невысокое.</div>
+        <div class="branch">Дима вытащил из кармана билет с блестящей полоской по краю. Он вспомнил, как сам собирал в детском саду всё, что блестит, и подумал: если птице показать вещь поинтереснее, она может поменяться. Оставалось положить приманку так, чтобы её было видно с ветки.</div>
+      </div>
+      <p class="hook">🔎 На месте: папоротники в Палеопарке растут прямо между фигурами. Присядь за одним из них и посмотри, что оттуда видно.</p>
+      <div class="place"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cyathea_Tree_Fern_%287113325905%29.jpg?width=900" alt="Папоротник" loading="lazy" onerror="this.style.display='none'"><span>Настоящее место действия: папоротники во дворе, ровесники динозавров</span></div>
+    </article>
+
+    <article class="chapter">
+      <div class="chn">Глава 7</div>
+      <h3>Приманка на пеньке</h3>
+      <svg class="scene" viewBox="0 0 640 360" role="img" aria-label="На пеньке лежит блестящая полоска, сорока летит к ней, мальчик отошёл на пять шагов">
+  <rect width="640" height="360" style="fill:var(--paper)"/>
+  <rect x="0" y="268" width="640" height="92" style="fill:var(--accent)" opacity=".2"/>
+  <ellipse cx="352" cy="300" rx="62" ry="16" style="fill:var(--ink)" opacity=".22"/>
+  <rect x="300" y="242" width="104" height="52" style="fill:var(--soft)"/>
+  <ellipse cx="352" cy="242" rx="52" ry="14" style="fill:var(--rule)"/>
+  <rect x="324" y="226" width="60" height="13" rx="4" style="fill:var(--gold)" transform="rotate(-6 354 232)"/>
+  <path d="M324 210 v-12 M352 204 v-14 M382 210 v-12" style="stroke:var(--gold)" stroke-width="4" stroke-linecap="round"/>
+  <g transform="translate(492 96) rotate(16)">
+    <ellipse cx="0" cy="0" rx="26" ry="15" style="fill:var(--ink)"/>
+    <path d="M20 6 l48 30 l-44 -8 z" style="fill:var(--ink)"/>
+    <circle cx="-22" cy="-9" r="12" style="fill:var(--ink)"/>
+    <path d="M-33 -9 l-15 4 l15 6 z" style="fill:var(--gold)"/>
+    <ellipse cx="2" cy="5" rx="11" ry="7" style="fill:var(--paper)"/>
+    <path d="M-4 -14 q26 -26 48 -6 q-26 14 -48 6 z" style="fill:var(--ink)" opacity=".75"/>
+    <circle cx="-25" cy="-12" r="2.6" style="fill:var(--paper)"/>
+  </g>
+  <path d="M462 140 q-40 40 -78 74" style="fill:none;stroke:var(--gold)" stroke-width="4" stroke-dasharray="8 9" stroke-linecap="round"/>
+  <g style="fill:var(--ink)">
+    <circle cx="96" cy="168" r="28"/>
+    <path d="M68 204 q28 -14 56 0 l8 72 h-72 z"/>
+    <rect x="72" y="276" width="24" height="42" rx="12"/><rect x="110" y="276" width="24" height="42" rx="12"/>
+  </g>
+  <g style="fill:var(--gold)"><circle cx="164" cy="322" r="5"/><circle cx="204" cy="322" r="5"/><circle cx="244" cy="322" r="5"/><circle cx="284" cy="322" r="5"/><circle cx="322" cy="322" r="5"/></g>
+  <text x="243" y="344" text-anchor="middle" font-size="19" font-weight="700" style="fill:var(--accent-deep)">пять шагов</text>
+</svg>
+      <p class="lede">Возле дорожки лежал старый пенёк — плоский, светлый, хорошо заметный сверху. Дима положил на него блестящую полоску от своего билета, разгладил её ладонью и повернул так, чтобы она поймала солнце.</p>
+      <p>Потом отошёл ровно на пять шагов назад, к папоротнику, сел на корточки и стал считать про себя. На двадцати сорока перестала делать вид, что ей неинтересно. На тридцати она перепрыгнула на ветку пониже. На сорока трёх — слетела вниз.</p>
+      <p>Птица села на край пенька и покрутила головой: слева блестела полоска, в лапе была тяжёлая спираль. Она попробовала взять полоску, не отпуская аммонит, но клювом и одной лапой это не получалось никак.</p>
+      <p>Дима не шевелился. Он уже понял, чем всё кончится, и просто ждал.</p>
+      <p class="hook">🔎 На месте: посмотри на гинкго снизу вверх — на верхних ветках правда можно что-нибудь спрятать так, что снизу не достанешь.</p>
+      <div class="place"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ginkgo_biloba_tree_with_yellow_leaves_in_Hakozaki_Campus%2C_Kyushu_University.jpg?width=900" alt="Дерево гинкго" loading="lazy" onerror="this.style.display='none'"><span>Настоящее место действия: гинкго — дерево времён динозавров</span></div>
+    </article>
+
+    <article class="chapter">
+      <div class="chn">Глава 8 · финал</div>
       <h3>Обмен</h3>
-      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nautilus_Shell_and_Ammonite_Fossil.jpg?width=900" alt="Аммонит" loading="lazy" onerror="this.style.display='none'">
+      <svg class="scene" viewBox="0 0 640 360" role="img" aria-label="Сорока улетает с блестящей полоской, а на траве остаётся спираль аммонита">
+        <rect width="640" height="360" style="fill:var(--paper)"/>
+        <rect x="0" y="276" width="640" height="84" opacity=".2" style="fill:var(--accent)"/>
+        <g transform="translate(452 108) rotate(-16)">
+          <ellipse cx="0" cy="0" rx="26" ry="15" style="fill:var(--ink)"/>
+          <path d="M20 6 l48 30 l-44 -8 z" style="fill:var(--ink)"/>
+          <circle cx="-22" cy="-9" r="12" style="fill:var(--ink)"/>
+          <path d="M-33 -9 l-15 4 l15 6 z" style="fill:var(--gold)"/>
+          <ellipse cx="2" cy="5" rx="11" ry="7" style="fill:var(--paper)"/>
+          <path d="M-6 -16 q28 -28 52 -6 q-28 16 -52 6 z" opacity=".75" style="fill:var(--ink)"/>
+          <rect x="-52" y="-4" width="30" height="8" rx="3" transform="rotate(-12 -37 0)" style="fill:var(--gold)"/>
+        </g>
+        <g transform="translate(214 250)">
+          <path d="M46 0 A46 46 0 1 1 -32 -33 A32 32 0 1 0 -6 20 A20 20 0 1 1 10 -8" fill="none" stroke-width="12" stroke-linecap="round" style="stroke:var(--accent-deep)"/>
+        </g>
+        <g style="fill:var(--ink)">
+          <circle cx="98" cy="166" r="28"/>
+          <path d="M70 202 q28 -14 56 0 l8 76 h-72 z"/>
+          <rect x="74" y="278" width="24" height="46" rx="12"/><rect x="112" y="278" width="24" height="46" rx="12"/>
+          <path d="M126 214 q38 10 62 32" stroke-width="16" fill="none" stroke-linecap="round" style="stroke:var(--ink)"/>
+        </g>
+        <g><circle cx="132" cy="140" r="13" style="fill:var(--gold)"/><path d="M132 112 v-12 M132 168 v12 M104 140 h-12 M160 140 h12" stroke-width="4" stroke-linecap="round" style="stroke:var(--gold)"/></g>
+      </svg>
       <p class="lede">Сорока наклонила голову. Посмотрела на блестящую полоску. Посмотрела на спираль в лапе. Потом ещё раз на полоску…</p>
       <button class="reveal" onclick="this.nextElementSibling.classList.add('show');document.dispatchEvent(new CustomEvent('gotbadge',{detail:'story'}))">Что было дальше?</button>
-      <div class="answer">Сорока бросила аммонит на траву и схватила полоску от билета — новая блестяшка показалась ей интереснее старой. Дима поднял спираль, обтёр её от песка и отнёс хранителю музея. Тот молча выслушал, вернул аммонит в витрину и снял со своего халата маленький значок с той самой спиралью. «Держи, инспектор. У нас так положено: нашёл — носи». Через десять минут во двор вошёл класс, и никто не понял, почему у Димы на куртке блестит новый значок.</div>
+      <div class="answer">Сорока разжала лапу. Аммонит стукнулся о пенёк, скатился в траву, а птица схватила полоску и унесла её на крышу — новая блестяшка показалась ей интереснее старой. Дима поднял спираль обеими руками: она была тяжёлая, холодная и в мелких бороздках, как ракушка, только каменная. Он обтёр её от песка и отнёс на первый этаж, к пустой витрине, где уже стоял растерянный хранитель. Тот выслушал всю историю молча, от начала до конца, вернул аммонит на бархат — и снял со своего халата маленький значок с такой же спиралью. «Держи, инспектор. У нас так положено: нашёл — носи». Через пять минут во двор вошёл класс, и никто не понял, почему у Димы на куртке блестит значок, которого утром не было.</div>
+      <div class="place"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nautilus_Shell_and_Ammonite_Fossil.jpg?width=900" alt="Аммонит" loading="lazy" onerror="this.style.display='none'"><span>Настоящий аммонит: слева раковина наутилуса, справа окаменевшая спираль</span></div>
     </article>
 
   </div>
 
-  <p class="truth"><b>А что тут правда?</b> Настоящие: аммонит на эмблеме музея, белка-альбинос и разноцветные лисы на 2 этаже, тарбозавр на 3 этаже, Палеопарк во дворе с мамонтом, гинкго и папоротниками. Выдуманные: сорока-воровка и вся пропажа. Кстати, про сорок часто говорят, будто они таскают всё блестящее, — но учёные проверили это опытами, и оказалось, что блестящие штуки сорок скорее пугают. Так что наша сорока — тоже выдумка.</p>
+  <p class="truth"><b>А что тут правда?</b> Настоящие: спираль-аммонит на эмблеме музея, витрины первого этажа со слоном и моржом, белка-альбинос и разноцветные лисы во втором зале, тарбозавр с крошечными передними лапами на третьем этаже, Палеопарк во дворе с мамонтом, папоротниками и деревом гинкго. Выдуманы: пропажа аммонита, сорока и весь обмен. Кстати, про сорок часто говорят, будто они тащат в гнездо всё блестящее, — но учёные проверили это опытами, и оказалось, что блестящие вещи сорок скорее пугают. Так что наша сорока — выдумка вдвойне.</p>
 </section>
 
 <!-- ============ 05 ЧТО ТУТ БЫЛО РАНЬШЕ ============ -->
