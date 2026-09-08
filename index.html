@@ -144,6 +144,29 @@
   .opt.lbl small{font-size:11px;font-weight:700;font-family:var(--body);color:var(--soft);}
   .game+.game{margin-top:14px;}
   .route.years .dot{line-height:1.05;padding:3px 9px;height:auto;min-height:22px;display:flex;align-items:center;text-align:center;}
+
+  /* ---------- ДОБАВЛЕНО: квест на странице ---------- */
+  .quest{display:flex;flex-direction:column;gap:16px;}
+  .qscore{align-self:flex-start;background:var(--accent);color:#fff;border-radius:20px;padding:7px 16px;font-weight:700;font-size:calc(14px*var(--scale));}
+  .qcase{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:18px 20px;box-shadow:0 4px 0 var(--rule);}
+  .qcase.solved{border-color:var(--accent);}
+  .qcase .qn{font-family:var(--disp);font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+  .qcase h3{margin:0 0 10px;font-family:var(--disp);font-weight:600;font-size:calc(19px*var(--scale));line-height:1.15;}
+  .qcase .qtext{margin:0 0 14px;font-size:calc(15.5px*var(--scale));}
+  .qopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .qopt{padding:0;border:2px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--bg);cursor:pointer;font:inherit;color:var(--ink);display:flex;flex-direction:column;transition:.12s;}
+  .qopt img{width:100%;height:118px;object-fit:cover;display:block;background:var(--paper);}
+  .qopt span{display:block;padding:8px 6px;font-weight:700;font-size:calc(13.5px*var(--scale));text-align:center;}
+  .qopt:hover{transform:translateY(-2px);}
+  .qopt.right{border-color:var(--accent);background:rgba(63,125,90,.14);}
+  .qopt.wrong{border-color:#c0483a;opacity:.45;}
+  .qres{display:none;margin-top:14px;padding:13px 15px;border-radius:10px;background:rgba(63,125,90,.12);border-left:3px solid var(--accent);font-size:calc(15px*var(--scale));}
+  .qres.show{display:block;}
+  .qhint{display:none;margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(192,72,58,.10);border-left:3px solid #c0483a;font-size:calc(14.5px*var(--scale));}
+  .qhint.show{display:block;}
+  .qfinal{display:none;background:var(--ink);color:var(--paper);border-radius:14px;padding:18px 20px;font-size:calc(16px*var(--scale));font-weight:700;}
+  .qfinal.show{display:block;}
+  @media (max-width:520px){.qopt img{height:92px;} .qopt span{font-size:calc(12.5px*var(--scale));padding:7px 4px;}}
 </style>
 </head>
 <body>
@@ -151,20 +174,19 @@
 <header class="hero wrap">
   <div class="eyebrow">Отдел странных находок · дело для Димы</div>
   <h1>Дарвиновский музей: <span class="accent">дело о спирали</span></h1>
-  <p class="lead">Дима, ты идёшь туда с классом. Прочитай это до поездки — и приедешь в музей уже подготовленным: будешь знать, где стоит слон, кто такой тарбозавр и куда исчезла спираль.</p>
+  <p class="lead">Дима, ты идёшь туда с классом. Прочитай это до поездки, раскрой дело о спирали и собери восемь улик прямо здесь — а в музее проверишь каждую своими глазами.</p>
   <div class="badges" id="badges">
     <div class="badge" data-badge="facts">📖</div>
     <div class="badge" data-badge="story">📜</div>
     <div class="badge" data-badge="game">🎮</div>
     <div class="badge" data-badge="quest">🔍</div>
-    <div class="badge" data-badge="finish">🏅</div>
   </div>
 </header>
 
 <!-- ============ 01 ФАКТЫ ============ -->
 <section class="wrap">
   <div class="tag"><span class="num">01</span> Находки</div>
-  <h2>Восемь фактов до поездки</h2>
+  <h2>Четырнадцать фактов до поездки</h2>
   <p class="sub">Нажимай на факт — откроется, и внутри фото, которые можно листать вбок 👉</p>
 
   <div class="facts" data-badge-src="facts">
@@ -303,6 +325,105 @@
       </div>
     </details>
 
+    <details class="fact">
+      <summary><span class="fn">9</span><span class="ft">В музее есть живые экспонаты — и их можно подержать в руках</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brachypelma_smithi_2009_G03.jpg?width=900" alt="Паук-птицеед" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Паук-птицеед — один из жителей живой экспозиции</div><div class="fallback"><span class="emoji">🕷️</span><span>Паук-птицеед</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Madagascar_hissing_cockroach_%28Gromphadorhina_portentosa%29%2C_Entomica_1.jpg?width=900" alt="Мадагаскарский шипящий таракан" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Мадагаскарский таракан умеет шипеть — воздухом, а не горлом</div><div class="fallback"><span class="emoji">🪳</span><span>Шипящий таракан</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Scorpion_Mom_with_babies.jpg?width=900" alt="Скорпион с детёнышами на спине" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Маленькие скорпиончики ездят на маме верхом</div><div class="fallback"><span class="emoji">🦂</span><span>Скорпион с детёнышами</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_055.JPG?width=900" alt="Витрина Дарвиновского музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Витрина Дарвиновского музея</div><div class="fallback"><span class="emoji">🏛️</span><span>Витрина музея</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_054.JPG?width=900" alt="Витрина Дарвиновского музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Ещё одна витрина музея</div><div class="fallback"><span class="emoji">🏛️</span><span>Витрина музея</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_037.JPG?width=900" alt="В залах Дарвиновского музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В залах Дарвиновского музея</div><div class="fallback"><span class="emoji">🏛️</span><span>Зал музея</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Почти все звери в музее — чучела, но есть исключение: живая экспозиция. Там сидят настоящие, живые насекомые, пауки, скорпионы и многоножки — около двадцати видов. Большинство из них родились прямо в музее, а не приехали откуда-то издалека.</p>
+        <p>За стеклом каждый день что-нибудь происходит: из куколки выбирается бабочка, гусеницы за пару часов объедают куст догола, сверчки «поют» — не голосом, а крыльями, потирая одно о другое. У самки скорпиона малыши ездят на спине, целой кучей, пока не подрастут.</p>
+        <p>На занятии «Шестиногие соседи по планете» сотрудники дают подержать кого-нибудь из них на ладони. Это безопасно — берут только тех, кто не кусается и не боится людей.</p>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">10</span><span class="ft">Как музей спасали во время войны</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/2024_Novodevichy_Convent_in_Moscow.jpg?width=900" alt="Новодевичий монастырь" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Новодевичий монастырь — туда увезли 57 ящиков с коллекцией</div><div class="fallback"><span class="emoji">⛪</span><span>Новодевичий монастырь</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Darwin_museum_%28Moscow%29%2C_vintage_exposition_01.jpg?width=900" alt="Старая экспозиция музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Так выглядел музей в старом здании</div><div class="fallback"><span class="emoji">🏛️</span><span>Старая экспозиция</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alexandr_Fedorovich_Kots_%281925%29.jpg?width=900" alt="Александр Котс" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Александр Котс — он и составил план спасения коллекции</div><div class="fallback"><span class="emoji">🧔</span><span>Котс</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/F.E._Fedulov_and_gorilla_01.jpg?width=900" alt="Таксидермист Федулов" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Мастер Федулов — один из тех, кто продолжал работать</div><div class="fallback"><span class="emoji">🛠️</span><span>Федулов</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_03.jpg?width=900" alt="Зал музея сегодня" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Те самые чучела стоят в залах и сегодня</div><div class="fallback"><span class="emoji">🏛️</span><span>Зал музея</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Летом 1941 года началась война, и главной заботой музея стало сберечь коллекцию. Сотрудников оставалось всего одиннадцать человек. Котс составил план: самое ценное — шкуры и чучела редких зверей, редкие книги, скульптуры и картины — упаковали в 57 ящиков и отвезли в Новодевичий монастырь.</p>
+        <p>Остальное вывозить не стали: враг до Москвы не дошёл. Но в старом здании музея оставалось очень много экспонатов, и верхние этажи считались самыми опасными. Тогда больше тысячи чучел — зубров, оленей, медведей — сотрудники руками перетаскали вниз, на первый этаж и в подвал.</p>
+        <p>Там они и переждали всю войну. Ни одно крупное чучело не пропало, и многие из них ты увидишь в залах сегодня.</p>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">11</span><span class="ft">Здесь хранятся вещи Гагарина, Дарвина и двух императоров</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Yuri_Gagarin_%281961%29_-_Restoration.jpg?width=900" alt="Юрий Гагарин" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Юрий Гагарин — первый человек в космосе</div><div class="fallback"><span class="emoji">🚀</span><span>Гагарин</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nikolay_Przhevalsky.jpg?width=900" alt="Николай Пржевальский" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Николай Пржевальский — путешественник, в честь него названа лошадь</div><div class="fallback"><span class="emoji">🐎</span><span>Пржевальский</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Charles_Darwin_by_Julia_Margaret_Cameron%2C_c._1868.jpg?width=900" alt="Чарлз Дарвин" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Чарлз Дарвин — пять его писем купили для музея в 1913 году</div><div class="fallback"><span class="emoji">✉️</span><span>Дарвин</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_04.jpg?width=900" alt="Витрины музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Витрины основной экспозиции</div><div class="fallback"><span class="emoji">🏛️</span><span>Витрины музея</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_053.JPG?width=900" alt="Витрина Дарвиновского музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Витрина Дарвиновского музея</div><div class="fallback"><span class="emoji">🏛️</span><span>Витрина</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Каждый экспонат кто-то когда-то нашёл, сделал или изучал — и у некоторых вещей в музее хозяева знаменитые. Хранители называют среди них императрицу Екатерину II, императора Николая II, Чарлза Дарвина, путешественника Николая Пржевальского и Юрия Гагарина.</p>
+        <p>С Дарвином история самая понятная: в 1913 году Котс с женой поехали за границу и купили для музея пять настоящих писем, написанных его рукой. Они хранятся здесь до сих пор.</p>
+        <p>Вещи знаменитых людей не выставлены отдельной кучей с табличкой «знаменитости» — они стоят среди обычных экспонатов. Так что, гуляя по залам, ты вполне можешь пройти мимо предмета, который держал в руках первый космонавт.</p>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">12</span><span class="ft">В музее с чучелами совсем не пахнет</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_052.JPG?width=900" alt="Зал Дарвиновского музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В залах Дарвиновского музея</div><div class="fallback"><span class="emoji">🏛️</span><span>Зал музея</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_01.jpg?width=900" alt="Основная экспозиция" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Витрины закрыты наглухо — это и спасает</div><div class="fallback"><span class="emoji">🏛️</span><span>Витрины</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_050.JPG?width=900" alt="Экспонат музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Сотрудник музея показывает экспонат</div><div class="fallback"><span class="emoji">🦫</span><span>Экспонат в руках</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/F.E._Fedulov_and_gorilla_02.jpg?width=900" alt="Таксидермическая мастерская" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В мастерской, где делают чучела</div><div class="fallback"><span class="emoji">🛠️</span><span>Мастерская</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%92%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_08.jpg?width=900" alt="Выставочный зал музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Выставочный зал музея</div><div class="fallback"><span class="emoji">🖼️</span><span>Выставочный зал</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Тысячи шкур и чучел в одном здании — казалось бы, пахнуть должно ужасно. Директор музея этим специально гордится: никакого запаха формалина или химикатов в залах нет.</p>
+        <p>Секрет в витринах. Они закрыты наглухо, герметично, и внутрь каждой кладут вещество, которое отпугивает моль и жуков-кожеедов — тех самых, что могут съесть чучело изнутри. Запах остаётся внутри витрины, а тебе достаётся только чистый воздух.</p>
+        <p>Так что, если в музее чем-то и пахнет, то скорее из кафе, чем из витрины с медведем.</p>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">13</span><span class="ft">Лабиринт, в котором можно потрогать зуб мамонта</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Trilobite_fossil%2C_Desert_Museum.jpg?width=900" alt="Трилобит" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Трилобит — его можно потрогать руками</div><div class="fallback"><span class="emoji">🪨</span><span>Трилобит</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Archaeopteryx_lithographica_%28Berlin_specimen%29.jpg?width=900" alt="Отпечаток археоптерикса" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Археоптерикс — древняя птица, отпечатавшаяся в камне</div><div class="fallback"><span class="emoji">🪶</span><span>Археоптерикс</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mammoth_fossil_tooth_-_Pleistocene%2C_USA_-_23202566565.jpg?width=900" alt="Зуб мамонта" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Зуб мамонта размером с кирпич</div><div class="fallback"><span class="emoji">🦷</span><span>Зуб мамонта</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%92%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_11.jpg?width=900" alt="Выставочный комплекс музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Выставочный комплекс, где спрятан лабиринт</div><div class="fallback"><span class="emoji">🧭</span><span>Выставочный комплекс</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Estemmenosuchus_mirabilis.jpg?width=900" alt="Древний ящер" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В лабиринте больше 50 древних зверей в натуральную величину</div><div class="fallback"><span class="emoji">🦎</span><span>Древний ящер</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_mammoth.jpg?width=900" alt="Мамонт" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Дорога в лабиринте заканчивается у стоянки древних людей</div><div class="fallback"><span class="emoji">🦣</span><span>Мамонт</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>В выставочном комплексе музея есть настоящий лабиринт — экспозиция «Пройди путём эволюции». Ты входишь в него 3,5 миллиарда лет назад и шаг за шагом идёшь через все эпохи до стоянки древнего человека. На каждом повороте — задание; если ответишь неверно, вспыхнет надпись, что ты забрёл в тупик, и придётся искать другой путь.</p>
+        <p>Все звери и растения в лабиринте сделаны в натуральную величину, их больше пятидесяти. А главное — здесь разрешают трогать руками: окаменевшие раковины, трилобита, зуб мамонта и отпечаток археоптерикса, первой известной птицы на Земле.</p>
+        <p>Вход в лабиринт — отдельный билет за 120 рублей, и только если у тебя уже есть билет в музей.</p>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">14</span><span class="ft">Можно померяться силой со слоном и услышать сердце колибри</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_038.JPG?width=900" alt="Интерактивный экспонат музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Интерактивные экспонаты Дарвиновского музея</div><div class="fallback"><span class="emoji">🕹️</span><span>Интерактивный стол</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_039.JPG?width=900" alt="Дети у интерактивного экспоната" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Здесь всё можно трогать и нажимать</div><div class="fallback"><span class="emoji">🕹️</span><span>Дети у экспоната</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_056.JPG?width=900" alt="Экран в музее" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Экраны с заданиями в залах музея</div><div class="fallback"><span class="emoji">📺</span><span>Экран с заданиями</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Volcano_hummingbird_%28Selasphorus_flammula%29_female_in_flight_1.jpg?width=900" alt="Колибри в полёте" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Сердце колибри бьётся так быстро, что стук сливается в гул</div><div class="fallback"><span class="emoji">🐦</span><span>Колибри</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chameleon_in_close-up.jpg?width=900" alt="Хамелеон" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Хамелеон Чарлик фотографируется со всеми гостями</div><div class="fallback"><span class="emoji">🦎</span><span>Хамелеон</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Loxodonta_africana_South_Luangwa_National_Park_%281%29.jpg?width=900" alt="Слон" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Со слоном тут можно померяться силой — по-честному не выйдет</div><div class="fallback"><span class="emoji">🐘</span><span>Слон</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>«Познай себя — познай мир» — отдельный зал музея площадью 200 квадратных метров, где почти всё нужно трогать. Тут можно увидеть мир глазами мыши и с высоты птичьего полёта, померяться силой со слоном, услышать, как стучит сердце колибри, и сравнить с тем, как стучит твоё.</p>
+        <p>Ещё там есть стеклянный пол, по которому страшновато идти, роботы, которых надо кормить, и загадки без подсказок: как шипит мадагаскарский таракан, есть ли у человека в голове молоточек и наковальня, семена какого дерева подсказали людям, как сделать вертолёт.</p>
+        <p>Живёт в центре и хамелеон Чарлик: с ним фотографируются, и снимок тут же приходит на почту. Вход сюда — отдельный билет за 120 рублей, к обычному билету в музей.</p>
+      </div>
+    </details>
+
   </div>
 </section>
 
@@ -335,32 +456,9 @@
   </div>
 </section>
 
-<!-- ============ 03 ПЛАН ============ -->
+<!-- ============ 03 СМОТРИ ВНИМАТЕЛЬНО ============ -->
 <section class="wrap">
-  <div class="tag"><span class="num">03</span> Маршрут</div>
-  <h2>План приключения</h2>
-  <p class="sub">Класс поведут по своему маршруту — но если знаешь план, ничего не пропустишь.</p>
-  <div class="card">
-    <b>Где:</b> Москва, ул. Вавилова, 57.<br>
-    <b>Как доехать:</b> метро «Академическая», выход № 4, дальше 1200 м пешком по улице Дмитрия Ульянова (10–15 минут). Или трамваи 14, 39 и Т1, автобусы 119, 529, 934, 111 — до остановки «Дарвиновский музей».<br>
-    <b>Когда открыт:</b> с 10:00 до 18:00 каждый день, кроме понедельника. Выставочный комплекс по четвергам работает с 13:00 до 21:00.<br>
-    <b>Сколько стоит:</b> школьникам московских школ — бесплатно, билет берут в кассе по карте учащегося; дошкольникам вход бесплатный. Взрослым — по билету; отдельно оплачивается интерактивный центр «Познай себя — познай мир».<br>
-    <b>Сколько длится:</b> вся основная экспозиция — около трёх часов. С классом обычно проходят два-три зала за 1,5–2 часа.<br>
-    <b>Что взять:</b> бутылку воды, перекус и эту страницу (или список квеста на бумажке).
-  </div>
-  <ol class="route">
-    <li class="stop"><span class="dot">1</span><h3>Двор и Палеопарк · 10 минут</h3><p>Ещё до входа: мамонт, амурозавр и остальные четверо. Найди гинкго — дерево времён динозавров.</p></li>
-    <li class="stop"><span class="dot">2</span><h3>1 этаж, «Многообразие жизни на Земле» · 25 минут</h3><p>Слоны, мегатерий, морж, гепард с детёнышами, крокодил. Здесь же по выходным показывают «Живую планету».</p></li>
-    <li class="stop"><span class="dot">3</span><h3>2 этаж, «Микроэволюция» · 25 минут</h3><p>Белка-альбинос, лисы всех цветов, павлин и биогруппа «Волки, нападающие на лося».</p></li>
-    <li class="stop"><span class="dot">4</span><h3>3 этаж, «Макроэволюция» и «Зоогеография» · 25 минут</h3><p>Тарбозавр, утконос, коралловый риф, обезьяна-носач. Самый «динозаврий» этаж.</p></li>
-    <li class="stop"><span class="dot">5</span><h3>Финал: отметить квест</h3><p>Соберёшь все шесть находок — открывай диплом внизу страницы. В музее есть сувенирные киоски: там продаются значки и фигурки.</p></li>
-  </ol>
-  <div class="note" style="margin-top:12px;font-size:13px;color:var(--soft);">Часы работы и цены иногда меняются — родителям стоит сверить их на сайте музея накануне.</div>
-</section>
-
-<!-- ============ 04 СМОТРИ ВНИМАТЕЛЬНО ============ -->
-<section class="wrap">
-  <div class="tag"><span class="num">04</span> Экспонаты</div>
+  <div class="tag"><span class="num">03</span> Экспонаты</div>
   <h2>Смотри внимательно</h2>
   <p class="sub">Пять вещей, которые ты встретишь вживую. Рассмотри их поближе — детали важнее общего вида.</p>
   <div class="facts">
@@ -436,9 +534,9 @@
   </div>
 </section>
 
-<!-- ============ 05 ИСТОРИЯ ============ -->
+<!-- ============ 04 ИСТОРИЯ ============ -->
 <section class="wrap">
-  <div class="tag"><span class="num">05</span> Дело</div>
+  <div class="tag"><span class="num">04</span> Дело</div>
   <h2>Дело о пропавшей спирали</h2>
   <p class="sub">Инспектор Дима приходит в музей раньше класса — и находит пустую витрину.</p>
 
@@ -506,9 +604,9 @@
   <p class="truth"><b>А что тут правда?</b> Настоящие: аммонит на эмблеме музея, белка-альбинос и разноцветные лисы на 2 этаже, тарбозавр на 3 этаже, Палеопарк во дворе с мамонтом, гинкго и папоротниками. Выдуманные: сорока-воровка и вся пропажа. Кстати, про сорок часто говорят, будто они таскают всё блестящее, — но учёные проверили это опытами, и оказалось, что блестящие штуки сорок скорее пугают. Так что наша сорока — тоже выдумка.</p>
 </section>
 
-<!-- ============ 06 ЧТО ТУТ БЫЛО РАНЬШЕ ============ -->
+<!-- ============ 05 ЧТО ТУТ БЫЛО РАНЬШЕ ============ -->
 <section class="wrap">
-  <div class="tag"><span class="num">06</span> История места</div>
+  <div class="tag"><span class="num">05</span> История места</div>
   <h2>Что тут было раньше</h2>
   <p class="sub">Музею больше ста лет, а свой дом у него появился совсем недавно.</p>
   <ol class="route years">
@@ -523,24 +621,118 @@
   <div class="card"><b>Самая странная история этого места:</b> посетители годами спорили, почему у огромного крокодила в зале «нет языка», и придумывали объяснения одно другого страннее. Разгадка скучнее и интереснее любой байки: язык есть, но у крокодилов он прирастает ко дну рта по всей длине. Это правда, а не легенда — так отвечают сами хранители музея.</div>
 </section>
 
-<!-- ============ 07 КВЕСТ ============ -->
+<!-- ============ КВЕСТ (играется прямо здесь) ============ -->
 <section class="wrap">
-  <div class="tag"><span class="num">07</span> Квест</div>
-  <h2>Найди это на месте</h2>
-  <p class="sub">Шесть находок. Нашёл — жми кружок. Соберёшь все — получишь значок 🔍</p>
-  <div class="facts" data-badge-src="quest">
-    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Спираль-аммонит</b> — эмблема музея. Она есть у входа и на ограде парка рядом.</span></label>
-    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Африканский слон</b> — 1 этаж. Сосчитай, во сколько раз он выше тебя.</span></label>
-    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Белка-альбинос</b> — 2 этаж, зал «Микроэволюция». Совершенно белая.</span></label>
-    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Волки, нападающие на лося</b> — 2 этаж. Найди, кто из них стоит спиной к тебе.</span></label>
-    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Тарбозавр</b> — 3 этаж, зал «Макроэволюция». Сравни его передние лапы со своими руками.</span></label>
-    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Мамонт и дерево гинкго</b> — двор, Палеопарк. Лист гинкго похож на веер.</span></label>
+  <div class="tag"><span class="num">06</span> Квест</div>
+  <h2>Восемь улик инспектора</h2>
+  <p class="sub">Играется прямо здесь, на странице — до поездки. Читай дело, выбирай картинку. Ошибся — ничего страшного, попытка остаётся. Соберёшь все восемь улик — получишь значок 🔍</p>
+
+  <div class="quest" data-badge-src="quest">
+    <div class="qscore">Улик собрано: <b><span id="qdone">0</span> из 8</b></div>
+
+    <article class="qcase">
+      <div class="qn">Улика 1</div>
+      <h3>Спираль на воротах</h3>
+      <p class="qtext">Дело начинается с эмблемы. На ограде музея и на всех табличках закручена одна и та же спираль — это раковина. Многие посетители уверены, что там нарисована улитка, и хранители устали это опровергать. Инспектор, кто на самом деле оставил эту раковину?</p>
+      <div class="qopts">
+        <button class="qopt" data-ok="1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fossil_Ammonite_Shell_%28Anapachydiscus_peninsularis%29_-_San_Diego_Natural_History_Museum.jpg?width=900" alt="Аммонит" loading="lazy"><span>Аммонит</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Helix_pomatia_edible_snail_Weinbergschnecke_01.jpg?width=900" alt="Виноградная улитка" loading="lazy"><span>Виноградная улитка</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nautilus_Pompilius_%281%29.jpg?width=900" alt="Наутилус" loading="lazy"><span>Наутилус</span></button>
+      </div>
+      <div class="qres"><b>Улика в кармане.</b> Это аммонит — вымерший моллюск, родственник осьминога и кальмара, а вовсе не улитка. Аммониты плавали в морях очень долго, со времён девона до самого конца мелового периода, а потом исчезли вместе с динозаврами. Спираль выбрали эмблемой потому, что жизнь на Земле развивается по спирали. Наутилус — дальний родственник аммонита, он живёт в океане до сих пор; улитка тут вообще ни при чём.</div>
+    </article>
+
+    <article class="qcase">
+      <div class="qn">Улика 2</div>
+      <h3>Кто топчется во дворе</h3>
+      <p class="qtext">Во дворе музея с 2015 года стоит Палеопарк — шесть фигур древних зверей в натуральную величину. Попасть туда мог не каждый: правило строгое, берут только тех, чьи кости находили на территории России. Кто из этой троицы прошёл отбор?</p>
+      <div class="qopts">
+        <button class="qopt" data-ok="1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_Mammoth_-_Horniman_Museum%2C_London.jpg?width=900" alt="Мамонт" loading="lazy"><span>Мамонт</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tyrannosaurus_rex_skeleton_%28cast_of_specimen_MOR_555%29_at_Cleveland_Museum_of_Natural_History.jpg?width=900" alt="Тираннозавр" loading="lazy"><span>Тираннозавр</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Masai_Giraffe_%28giraffa_camelopardalis_tippelskirchi%29.jpg?width=900" alt="Жираф" loading="lazy"><span>Жираф</span></button>
+      </div>
+      <div class="qres"><b>Точно, мамонт.</b> Его кости находили по всей стране и даже в самой Москве, так что место во дворе он заслужил честно. Тираннозавра сюда не пустили: его находят в Северной Америке, а не у нас. Жираф не подходит вдвойне — он не древний и живёт в Африке прямо сейчас. Компанию мамонту составили амурозавр, килеск, эстемменозух, пандерихтис и мастодонзавр.</div>
+    </article>
+
+    <article class="qcase">
+      <div class="qn">Улика 3</div>
+      <h3>Сцена на втором этаже</h3>
+      <p class="qtext">На втором этаже, в зале «Микроэволюция», застыла целая сцена из нескольких чучел — биогруппа. Волки напали на крупного зверя, и тот развернулся, чтобы защищаться. Посетители музея голосовали за любимые экспонаты, и эта сцена попала в список победителей. На кого напали волки?</p>
+      <div class="qopts">
+        <button class="qopt" data-ok="1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Elk_%28Alces_alces%29_Biebrzanski.jpg?width=900" alt="Лось" loading="lazy"><span>Лось</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wild_boar_%28Sus_scrofa%29_-_geograph.org.uk_-_1063521.jpg?width=900" alt="Кабан" loading="lazy"><span>Кабан</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Eurasian_brown_bear_%28Ursus_arctos_arctos%29_standing_on_rear_legs%2C_Skansen%2C_Stockholm%2C_Sweden_julesvernex2.jpg?width=900" alt="Медведь" loading="lazy"><span>Медведь</span></button>
+      </div>
+      <div class="qres"><b>Верно, лось.</b> Биогруппа так и называется — «Волки, нападающие на лося». Лось — самый крупный олень на свете, весом почти в тонну, и волку в одиночку с ним не справиться: поэтому они и охотятся стаей. Когда будешь у витрины, посмотри не на волков, а на ноги лося — он не убегает, а развернулся. Копытом лось может отбиться, и охота нередко заканчивается ничем.</div>
+    </article>
+
+    <article class="qcase">
+      <div class="qn">Улика 4</div>
+      <h3>Пропавший язык</h3>
+      <p class="qtext">Посетители годами задавали хранителям один и тот же вопрос: почему у огромного зверя в зале не видно языка? Придумывали всякое — мол, вырвали, потеряли, забыли приделать. Разгадка оказалась простой: язык на месте, просто он прирос ко дну рта по всей длине, и высунуть его хозяин не может. О ком речь?</p>
+      <div class="qopts">
+        <button class="qopt" data-ok="1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nile_crocodile_in_Chobe_National_Park_01.jpg?width=900" alt="Крокодил" loading="lazy"><span>Крокодил</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/European_Common_Frog_Rana_temporaria.jpg?width=900" alt="Лягушка" loading="lazy"><span>Лягушка</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Indian_Peafowl_on_Display.jpg?width=900" alt="Павлин" loading="lazy"><span>Павлин</span></button>
+      </div>
+      <div class="qres"><b>Так и есть — крокодил.</b> У всех крокодилов язык прирастает ко дну ротовой полости, поэтому дразниться языком они не умеют. У лягушки всё наоборот: её язык прикреплён спереди и выстреливает вперёд, чтобы поймать муху. Когда найдёшь крокодила в зале, загляни ему в пасть и проверь сам — пасть у чучела приоткрыта.</div>
+    </article>
+
+    <article class="qcase">
+      <div class="qn">Улика 5</div>
+      <h3>Белка не того цвета</h3>
+      <p class="qtext">В Дарвиновском музее собрана одна из самых больших в мире коллекций зверей со странной окраской. Инспектору нужен альбинос — животное, которое родилось совсем без красящего вещества. Одна из этих трёх белок настоящий альбинос. Которая?</p>
+      <div class="qopts">
+        <button class="qopt" data-ok="1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Albino_Squirrel_-_geograph.org.uk_-_5634778.jpg?width=900" alt="Белая белка" loading="lazy"><span>Белая белка</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Squirrel_posing.jpg?width=900" alt="Рыжая белка" loading="lazy"><span>Рыжая белка</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Melanistic_eastern_gray_squirrel%2C_Central_Park%2C_Manhattan%2C_New_York.jpg?width=900" alt="Чёрная белка" loading="lazy"><span>Чёрная белка</span></button>
+      </div>
+      <div class="qres"><b>Верно — белая.</b> У альбиноса совсем нет красящего вещества, поэтому шерсть белая, а глаза розовые: сквозь них просвечивают кровеносные сосуды. Чёрная белка — противоположный случай, меланист: краски у неё, наоборот, слишком много. Рыжая — обычная, самая заурядная белка. В лесу и белой, и чёрной живётся тяжело: их слишком хорошо видно и ястребу, и кунице.</div>
+    </article>
+
+    <article class="qcase">
+      <div class="qn">Улика 6</div>
+      <h3>Родственник на третьем этаже</h3>
+      <p class="qtext">На третьем этаже, в зале «Макроэволюция», стоит скелет хищного динозавра. Это близкий родственник тираннозавра, только жил он не в Америке, а в Азии, и имя его переводится примерно как «пугающий ящер». Найди его среди трёх скелетов.</p>
+      <div class="qopts">
+        <button class="qopt" data-ok="1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tarbosaurus_bataar_skeleton_in_Mongolian_Natural_History_Museum%2C_Ulanbataar.jpg?width=900" alt="Тарбозавр" loading="lazy"><span>Тарбозавр</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Triceratops_skeleton_at_National_Science_Museum_in_South_Korea.jpg?width=900" alt="Трицератопс" loading="lazy"><span>Трицератопс</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Stegosaurus_skeleton_at_National_Museum_of_Scotland.jpg?width=900" alt="Стегозавр" loading="lazy"><span>Стегозавр</span></button>
+      </div>
+      <div class="qres"><b>Это тарбозавр.</b> Узнать его просто: огромная голова с зубами разной длины и совсем короткие передние лапы — короче твоей руки, хотя сам он размером с автобус. Трицератопса выдают три рога и костяной воротник на шее, стегозавра — пластины вдоль спины и шипы на хвосте; оба ели растения. А тарбозавр был хищником, и посетители музея тоже включили его в список любимых экспонатов.</div>
+    </article>
+
+    <article class="qcase">
+      <div class="qn">Улика 7</div>
+      <h3>Дерево-свидетель</h3>
+      <p class="qtext">Когда во дворе делали Палеопарк, туда специально посадили растения, которые росли ещё при динозаврах, — чтобы двор выглядел по-настоящему древним. Одно из этих деревьев ты узнаешь по листу: он похож на маленький веер и осенью становится ярко-жёлтым. Какое это дерево?</p>
+      <div class="qopts">
+        <button class="qopt" data-ok="1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/GinkgoLeaves.jpg?width=900" alt="Гинкго" loading="lazy"><span>Гинкго</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/New_snow_on_birch_crowns_in_Tuntorp_3.jpg?width=900" alt="Берёза" loading="lazy"><span>Берёза</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Quercus_robur_RF.jpg?width=900" alt="Дуб" loading="lazy"><span>Дуб</span></button>
+      </div>
+      <div class="qres"><b>Гинкго, конечно.</b> Это дерево росло на Земле ещё до динозавров и дожило до наших дней почти не изменившись — родственников у него не осталось совсем. Рядом в Палеопарке высадили папоротники и хвойные, тоже очень древние. Берёза и дуб появились гораздо позже, когда динозавров уже не было. Найди во дворе лист-веер — это и будет твоя улика.</div>
+    </article>
+
+    <article class="qcase">
+      <div class="qn">Улика 8</div>
+      <h3>Самый большой в музее</h3>
+      <p class="qtext">Последнее задание. Хранители музея на вопрос «какой экспонат у вас самый большой» отвечают не задумываясь. Все главные великаны стоят в одном зале на первом этаже — «Многообразие жизни на Земле». Кто из этих троих там самый крупный?</p>
+      <div class="qopts">
+        <button class="qopt" data-ok="1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Loxodonta_africana_AMNH_Left.jpg?width=900" alt="Слон" loading="lazy"><span>Слон</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Walrus_%28Odobenus_rosmarus%29_on_Svalbard.jpg?width=900" alt="Морж" loading="lazy"><span>Морж</span></button>
+        <button class="qopt"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cheetah_and_little_cheetahs.jpg?width=900" alt="Гепард" loading="lazy"><span>Гепард</span></button>
+      </div>
+      <div class="qres"><b>Дело закрыто — слон.</b> Самые большие экспонаты музея — чучела африканского и индийского слонов и реконструкция мегатерия, огромного вымершего ленивца. Чучело африканского слона собрал мастер Фёдор Федулов ещё в 1927 году, вручную. Морж рядом с ним кажется небольшим, хотя весит почти как маленький автомобиль, а гепард вообще лёгкий — зато самый быстрый на суше.</div>
+    </article>
+
+    <div class="qfinal" id="qfinal">🔍 Все восемь улик собраны. Инспектор Дима, дело раскрыто — теперь проверь каждую улику своими глазами в музее.</div>
   </div>
 </section>
 
-<!-- ============ 08 ЧТО РЯДОМ ============ -->
+<!-- ============ 07 ЧТО РЯДОМ ============ -->
 <section class="wrap">
-  <div class="tag"><span class="num">08</span> Рядом</div>
+  <div class="tag"><span class="num">07</span> Рядом</div>
   <h2>Что ещё рядом</h2>
   <p class="sub">Если останутся силы — всё это в пяти минутах от музея.</p>
   <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Academic_District%2C_Moscow%2C_Russia_-_panoramio_%28106%29.jpg?width=900" alt="Академический район Москвы" loading="lazy" onerror="this.style.display='none'"><b>Парк «Академический»</b> — больше 16 гектаров прямо по соседству: холмы, детские и спортивные площадки, стадион с беговой дорожкой. Открыли его в 2017 году, а вход украсили фигурами древних животных. На ограде — эмблема музея, тот самый аммонит.</div>
@@ -549,9 +741,9 @@
   <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Moscow%2C_Vavilova_street%2C_trams_Apr_2026_05.jpg?width=900" alt="Трамваи на улице Вавилова" loading="lazy" onerror="this.style.display='none'"><b>Трамвайная остановка «Дарвиновский музей»</b> — на улице Вавилова. Сюда приходят трамваи 14, 39 и Т1. Если повезёт, увидишь новый трамвай «Витязь».</div>
 </section>
 
-<!-- ============ 09 АФИША ============ -->
+<!-- ============ 08 АФИША ============ -->
 <section class="wrap">
-  <div class="tag"><span class="num">09</span> Афиша</div>
+  <div class="tag"><span class="num">08</span> Афиша</div>
   <h2>Что сейчас интересного</h2>
   <p class="sub">Прямо в эти недели в музее идёт вот что — можно вернуться в выходные с родителями.</p>
   <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wolf-winter-hunting-snow-trees_-_West_Virginia_-_ForestWander.jpg?width=900" alt="Волк в зимнем лесу" loading="lazy" onerror="this.style.display='none'"><b>Выставка «Белый клык»</b> · до 1 ноября 2026 — про волков и собак, тех самых, что в книжке Джека Лондона. 27 сентября на выставке проходит тематическая программа «Зов предков».</div>
@@ -572,16 +764,6 @@
     <p><b>Практика:</b> школьникам московских школ вход бесплатный — билет берут в кассе по карте учащегося. Основная экспозиция целиком — это около трёх часов; сотрудники музея сами советуют с ребёнком выбирать не больше трёх залов. В музее есть кафе, зоны отдыха и сувенирные киоски. Парковка на 45 мест, въезд с улицы Вавилова.</p>
     <p><b>Про шум:</b> в залах с классом бывает громко, а Дима от шума быстро устаёт. Двор с Палеопарком — тихое место рядом, туда удобно выйти и отдышаться.</p>
   </details>
-</section>
-
-<!-- ============ ФИНАЛ ============ -->
-<section class="wrap" style="text-align:center;">
-  <div class="game" data-badge-src="finish">
-    <div class="prompt">🏅 Удостоверение инспектора: Дмитрий</div>
-    <p class="sub" style="margin:0;">Факты прочитаны, дело раскрыто, находки собраны — жми кнопку.</p>
-    <button class="reveal" onclick="this.nextElementSibling.classList.add('show');document.dispatchEvent(new CustomEvent('gotbadge',{detail:'finish'}))">Закрыть дело</button>
-    <div class="answer">Дело закрыто. Инспектор Дима, отдел странных находок. Спираль на месте. 🌀</div>
-  </div>
 </section>
 
 <footer class="wrap">
@@ -637,6 +819,33 @@
   // квест: отметил все галочки — бейдж
   (function(){var box=document.querySelector('[data-badge-src="quest"]');if(!box)return;var c=box.querySelectorAll('.questbox');c.forEach(function(x){x.addEventListener('change',function(){if([].every.call(c,function(y){return y.checked;}))grant('quest');});});})();
   paint();
+
+  /* ---- Квест на странице: выбор картинки ---- */
+  (function(){
+    var box=document.querySelector('.quest'); if(!box)return;
+    var cases=[].slice.call(box.querySelectorAll('.qcase'));
+    var done={}, out=document.getElementById('qdone'), fin=document.getElementById('qfinal');
+    cases.forEach(function(c,idx){
+      var hint=document.createElement('div'); hint.className='qhint';
+      hint.textContent='Не она. Посмотри на остальные картинки — попытка остаётся.';
+      c.appendChild(hint);
+      c.querySelectorAll('.qopt').forEach(function(b){
+        b.onclick=function(){
+          if(done[idx])return;
+          if(b.dataset.ok){
+            b.classList.add('right'); c.classList.add('solved');
+            c.querySelector('.qres').classList.add('show');
+            hint.classList.remove('show');
+            done[idx]=1; out.textContent=Object.keys(done).length;
+            if(Object.keys(done).length>=cases.length){
+              fin.classList.add('show');
+              document.dispatchEvent(new CustomEvent('gotbadge',{detail:'quest'}));
+            }
+          } else { b.classList.add('wrong'); hint.classList.add('show'); }
+        };
+      });
+    });
+  })();
 </script>
 </body>
 </html>
