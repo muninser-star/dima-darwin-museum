@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<!--
+  ШАБЛОН СТРАНИЦЫ-ПРИКЛЮЧЕНИЯ. Это рабочий каркас — скопируй и адаптируй.
+  Что менять под каждое приключение:
+    1. :root — палитра и шрифты под ТЕМУ (см. references/design.md).
+    2. Тексты, факты, фото (карусели), игры, план, «что рядом».
+    3. История-приключение и «что тут было раньше» — под конкретное место (см. references/sections.md).
+    4. Уровень сложности — под возраст ребёнка (см. references/games.md, references/sections.md).
+  Что НЕ ломать: механику карусели, бейджей, озвучки, аккордеонов — она уже работает.
+  Фото к фактам грузятся из сети (реальные снимки); вся остальная механика работает без внешних зависимостей.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Инспектор Дима в Дарвиновском музее</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ПАЛИТРА ПОД ТЕМУ — заменить (см. references/design.md) */
+    --bg:#E9E4D8; --paper:#F4EFE3; --ink:#22201C; --soft:#5E574A;
+    --accent:#3F7D5A; --accent-deep:#2A5C41; --gold:#C7A33A; --rule:#C6BCA6;
+    --shadow:rgba(34,32,28,.14);
+    --disp:'Unbounded', Georgia, serif;
+    --body:'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    /* КРУПНЕЕ для малышей (3–5 лет). Для 6–8 можно уменьшить до 1. */
+    --scale:1;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.6;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px;}
+  h2{font-family:var(--disp);font-weight:600;font-size:calc(clamp(23px,4.6vw,34px)*var(--scale));margin:0 0 6px;line-height:1.12;}
+  .sub{color:var(--soft);margin:0 0 22px;font-size:calc(16px*var(--scale));}
+  section{padding:40px 0;}
+  .tag{display:inline-flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:12px;color:var(--accent-deep);margin-bottom:12px;}
+  .tag .num{font-family:var(--disp);font-weight:800;font-size:13px;background:var(--accent);color:#fff;width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;letter-spacing:0;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:52px 0 34px;text-align:center;}
+  .hero .eyebrow{font-weight:700;letter-spacing:.26em;text-transform:uppercase;font-size:12px;color:var(--soft);margin-bottom:14px;}
+  .hero h1{font-family:var(--disp);font-weight:800;font-size:calc(clamp(30px,7vw,56px)*var(--scale));line-height:1.03;margin:0 0 10px;}
+  .hero h1 .accent{color:var(--accent);}
+  .hero .lead{max-width:540px;margin:0 auto;font-size:calc(17px*var(--scale));color:var(--soft);}
+
+  /* ---------- КАРУСЕЛЬ ФОТО (свайп вбок) ---------- */
+  .carousel{position:relative;margin:0 0 12px;}
+  .track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;border-radius:12px;}
+  .track::-webkit-scrollbar{display:none;}
+  .slide{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/3;border-radius:12px;overflow:hidden;position:relative;background:var(--paper);border:1px solid var(--rule);}
+  .slide img{width:100%;height:100%;object-fit:cover;display:block;}
+  .slide .cap{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(43,33,23,.82));color:#F6F0E1;font-size:13px;padding:22px 12px 9px;}
+  /* Фолбэк-страховка, если фото по ссылке не загрузилось */
+  .slide.noimg img{display:none;}
+  .slide .fallback{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--paper);color:var(--soft);text-align:center;padding:16px;}
+  .slide.noimg .fallback{display:flex;}
+  .slide .fallback .emoji{font-size:44px;}
+  .cbtn{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:none;background:rgba(43,33,23,.6);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;}
+  .cbtn:focus-visible{outline:3px solid var(--gold);}
+  .cbtn.prev{left:8px;} .cbtn.next{right:8px;}
+  .dots{display:flex;gap:6px;justify-content:center;margin-top:8px;}
+  .dots i{width:7px;height:7px;border-radius:50%;background:var(--rule);transition:.2s;cursor:pointer;}
+  .dots i.on{background:var(--accent);width:20px;border-radius:4px;}
+
+  /* ---------- ФАКТЫ (аккордеон) ---------- */
+  .facts{display:flex;flex-direction:column;gap:12px;}
+  .fact{background:var(--paper);border:1px solid var(--rule);border-radius:12px;box-shadow:0 3px 0 var(--rule);overflow:hidden;}
+  .fact>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 17px;font-weight:700;font-size:calc(15.5px*var(--scale));}
+  .fact>summary::-webkit-details-marker{display:none;}
+  .fact>summary:focus-visible{outline:3px solid var(--gold);outline-offset:-3px;border-radius:12px;}
+  .fact .fn{font-family:var(--disp);font-weight:800;color:#fff;background:var(--gold);min-width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto;}
+  .fact .ft{flex:1 1 auto;} .fact .chev{color:var(--soft);font-size:12px;transition:transform .25s;}
+  .fact[open] .chev{transform:rotate(180deg);} .fact[open]>summary{border-bottom:1px solid var(--rule);}
+  .fbody{padding:15px 17px 17px;} .fbody p{margin:10px 0 0;font-size:calc(15px*var(--scale));}
+  .speak{background:none;border:1px solid var(--accent);color:var(--accent-deep);border-radius:20px;padding:5px 12px;font-size:13px;font-weight:700;cursor:pointer;margin-top:12px;display:inline-flex;gap:6px;align-items:center;}
+
+  /* ---------- КАРТОЧКИ / ПЛАН / РЯДОМ ---------- */
+  .card>img{width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block;}
+  .card{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:18px 20px;box-shadow:0 4px 0 var(--rule);margin-bottom:14px;}
+  .route{list-style:none;margin:0;padding:0;position:relative;}
+  .route::before{content:"";position:absolute;left:15px;top:8px;bottom:8px;width:2px;background:repeating-linear-gradient(var(--rule) 0 6px,transparent 6px 12px);}
+  .stop{position:relative;padding:0 0 20px 46px;} .stop:last-child{padding-bottom:0;}
+  .stop .dot{position:absolute;left:6px;top:2px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px var(--bg);}
+  .stop h3{margin:0 0 3px;font-size:calc(16.5px*var(--scale));font-family:var(--disp);font-weight:600;} .stop p{margin:0;font-size:calc(14.5px*var(--scale));color:var(--soft);}
+
+  /* ---------- ИСТОРИЯ-ПРИКЛЮЧЕНИЕ ---------- */
+  .story{display:flex;flex-direction:column;gap:16px;}
+  .chapter{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:18px 20px;box-shadow:0 4px 0 var(--rule);}
+  .chapter>img{width:100%;height:170px;object-fit:cover;border-radius:10px;margin:0 0 12px;display:block;}
+  .chapter .chn{font-family:var(--disp);font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+  .chapter h3{margin:0 0 10px;font-family:var(--disp);font-weight:600;font-size:calc(19px*var(--scale));line-height:1.15;}
+  .chapter p{margin:0 0 10px;font-size:calc(15.5px*var(--scale));}
+  .chapter .lede::first-letter{font-family:var(--disp);font-weight:800;font-size:2.6em;line-height:.86;float:left;padding:3px 9px 0 0;color:var(--accent);}
+  .chapter .hook{background:rgba(190,131,32,.12);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:9px 12px;font-size:calc(14px*var(--scale));color:var(--accent-deep);margin:0;}
+  .chapter .answer{text-align:left;}
+  .fork{margin:4px 0 0;} .fork .fq{font-weight:700;font-size:calc(15px*var(--scale));margin-bottom:9px;}
+  .fork .opts2{display:flex;flex-wrap:wrap;gap:10px;}
+  .fork button{flex:1 1 200px;background:var(--bg);border:2px solid var(--rule);border-radius:12px;padding:11px 14px;font:inherit;font-size:calc(14.5px*var(--scale));font-weight:700;color:var(--ink);cursor:pointer;text-align:left;transition:.12s;}
+  .fork button:hover{transform:translateY(-2px);} .fork button.picked{border-color:var(--accent);background:rgba(44,124,107,.14);}
+  .fork .branch{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;background:rgba(44,124,107,.10);border-left:3px solid var(--accent);font-size:calc(15px*var(--scale));}
+  .fork .branch.show{display:block;}
+  .truth{background:var(--paper);border:1px dashed var(--rule);border-radius:12px;padding:13px 16px;font-size:calc(13.5px*var(--scale));color:var(--soft);margin-top:16px;}
+
+  /* ---------- ЛЕНТА ВРЕМЕНИ (что тут было раньше) ---------- */
+  .route.years::before{left:22px;}
+  .route.years .stop{padding-left:62px;}
+  .route.years .dot{left:0;width:auto;min-width:44px;height:22px;border-radius:11px;padding:0 9px;font-size:11px;background:var(--accent-deep);}
+  .stop .then{display:block;margin-top:6px;font-size:calc(13.5px*var(--scale));color:var(--accent-deep);}
+
+  /* ---------- МИНИ-ИГРА (пример-каркас) ---------- */
+  .game{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:20px;box-shadow:0 4px 0 var(--rule);margin-bottom:14px;text-align:center;}
+  .game .prompt{font-weight:700;font-size:calc(16px*var(--scale));margin-bottom:14px;}
+  .opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+  .opt{font-size:calc(30px*var(--scale));background:var(--bg);border:2px solid var(--rule);border-radius:14px;width:74px;height:74px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.12s;}
+  .opt:hover{transform:translateY(-2px);} .opt.right{border-color:var(--accent);background:rgba(44,124,107,.15);} .opt.wrong{border-color:#c0483a;opacity:.5;}
+  .reveal{background:var(--accent);color:#fff;border:none;font-weight:700;font-size:14px;padding:10px 20px;border-radius:24px;cursor:pointer;}
+  .answer{margin-top:12px;padding:12px 14px;border-radius:10px;background:rgba(44,124,107,.10);border-left:3px solid var(--accent);font-size:calc(14.5px*var(--scale));display:none;}
+  .answer.show{display:block;}
+
+  /* ---------- БЕЙДЖИ / ПРОГРЕСС ---------- */
+  .badges{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px;}
+  .badge{width:60px;height:60px;border-radius:50%;border:2px dashed var(--rule);display:flex;align-items:center;justify-content:center;font-size:26px;opacity:.35;filter:grayscale(1);transition:.3s;}
+  .badge.got{opacity:1;filter:none;border-style:solid;border-color:var(--gold);background:rgba(190,131,32,.12);transform:scale(1.05);}
+
+  /* ---------- РОДИТЕЛЮ ---------- */
+  .parent{background:var(--ink);color:var(--paper);border-radius:14px;padding:18px 20px;}
+  .parent summary{cursor:pointer;font-weight:700;list-style:none;} .parent summary::-webkit-details-marker{display:none;}
+  .parent[open] summary{margin-bottom:10px;} .parent p,.parent li{font-size:14px;color:#e6ddca;}
+
+  footer{text-align:center;padding:30px 0 44px;color:var(--soft);font-size:13px;}
+  footer .stamp{font-family:var(--disp);font-weight:800;color:var(--accent);font-size:15px;margin-bottom:6px;}
+
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;} .track{scroll-behavior:auto;}}
+  @media print{
+    .cbtn,.dots,.speak,.reveal,.parent{display:none!important;}
+    .track{overflow:visible;} .slide{flex-basis:auto;page-break-inside:avoid;}
+    body{background:#fff;}
+  }
+
+  /* ---------- ДОБАВЛЕНО: игры инспектора ---------- */
+  .cipher{font-size:calc(15px*var(--scale));letter-spacing:.04em;color:var(--accent-deep);background:rgba(63,125,90,.10);border-radius:10px;padding:9px 12px;margin:0 0 14px;}
+  .opt.word{width:auto;min-width:120px;height:64px;padding:0 18px;font-family:var(--disp);font-weight:800;font-size:calc(16px*var(--scale));letter-spacing:.02em;}
+  .opt.lbl{flex-direction:column;gap:2px;width:92px;height:92px;font-size:calc(30px*var(--scale));}
+  .opt.lbl small{font-size:11px;font-weight:700;font-family:var(--body);color:var(--soft);}
+  .game+.game{margin-top:14px;}
+  .route.years .dot{line-height:1.05;padding:3px 9px;height:auto;min-height:22px;display:flex;align-items:center;text-align:center;}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="eyebrow">Отдел странных находок · дело для Димы</div>
+  <h1>Дарвиновский музей: <span class="accent">дело о спирали</span></h1>
+  <p class="lead">Дима, ты идёшь туда с классом. Прочитай это до поездки — и приедешь в музей уже подготовленным: будешь знать, где стоит слон, кто такой тарбозавр и куда исчезла спираль.</p>
+  <div class="badges" id="badges">
+    <div class="badge" data-badge="facts">📖</div>
+    <div class="badge" data-badge="story">📜</div>
+    <div class="badge" data-badge="game">🎮</div>
+    <div class="badge" data-badge="quest">🔍</div>
+    <div class="badge" data-badge="finish">🏅</div>
+  </div>
+</header>
+
+<!-- ============ 01 ФАКТЫ ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">01</span> Находки</div>
+  <h2>Восемь фактов до поездки</h2>
+  <p class="sub">Нажимай на факт — откроется, и внутри фото, которые можно листать вбок 👉</p>
+
+  <div class="facts" data-badge-src="facts">
+
+    <details class="fact">
+      <summary><span class="fn">1</span><span class="ft">Музей придумал мальчишка, который собирал птиц</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Founders_of_Darwin_museum_%28Moscow%29%2C_1912.jpg?width=900" alt="Основатели Дарвиновского музея, 1912" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Основатели музея, 1912 год</div><div class="fallback"><span class="emoji">📷</span><span>Основатели музея, 1912</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alexandr_Fedorovich_Kots_%281925%29.jpg?width=900" alt="Александр Котс" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Александр Котс, основатель музея. 1925</div><div class="fallback"><span class="emoji">🧔</span><span>Александр Котс</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/A.F._Kots_and_N.N.Ladygina.jpg?width=900" alt="Котс и Ладыгина-Котс" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Котс и его жена Надежда Ладыгина-Котс</div><div class="fallback"><span class="emoji">👫</span><span>Котс и Ладыгина-Котс</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Darwin_museum_%28Moscow%29%2C_vintage_exposition_01.jpg?width=900" alt="Старая экспозиция музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Так музей выглядел сто лет назад</div><div class="fallback"><span class="emoji">🏛️</span><span>Старая экспозиция</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/F.E._Fedulov_and_gorilla_01.jpg?width=900" alt="Таксидермист Федулов за работой" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Мастер Фёдор Федулов делает чучело</div><div class="fallback"><span class="emoji">🦍</span><span>Мастер за работой</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Charles_Darwin_by_Julia_Margaret_Cameron%2C_c._1868.jpg?width=900" alt="Чарлз Дарвин" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Чарлз Дарвин — в его честь назвали музей</div><div class="fallback"><span class="emoji">🧓</span><span>Чарлз Дарвин</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_01.jpg?width=900" alt="Зал Дарвиновского музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Залы музея сегодня</div><div class="fallback"><span class="emoji">🏛️</span><span>Залы музея</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Александр Котс с пяти лет собирал всё, что связано с животными, и сам научился делать чучела. Деньги, которые ему давали на завтраки, он тратил на птиц для своей коллекции, а в 19 лет уехал в экспедицию в Сибирь.</p>
+        <p>В 1907 году из этой домашней коллекции вырос целый музей. Сегодня в его хранилищах больше 400 000 экспонатов — показать сразу всё невозможно.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">2</span><span class="ft">Самые большие экспонаты — два слона и гигантский ленивец</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Loxodonta_africana_South_Luangwa_National_Park_%281%29.jpg?width=900" alt="Африканский слон" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Африканский слон — самое крупное сухопутное животное</div><div class="fallback"><span class="emoji">🐘</span><span>Африканский слон</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/African_bush_elephants_%28Loxodonta_africana%29_female_with_six-week-old_baby.jpg?width=900" alt="Слониха со слонёнком" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Слониха и слонёнок, которому шесть недель</div><div class="fallback"><span class="emoji">🐘</span><span>Слониха со слонёнком</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/178_Male_African_bush_elephant_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg?width=900" alt="Взрослый слон-самец" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Взрослый самец: до четырёх метров в холке</div><div class="fallback"><span class="emoji">🐘</span><span>Слон-самец</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Desert_elephant_%28Loxodonta_africana%29_spraying_sand.jpg?width=900" alt="Слон обсыпается песком" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Слоны обсыпают себя песком — так спасаются от жары</div><div class="fallback"><span class="emoji">🏜️</span><span>Слон и песок</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Loxodonta_africana_AMNH_Left.jpg?width=900" alt="Чучело слона в музее" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Так слон выглядит в музейном зале</div><div class="fallback"><span class="emoji">🏛️</span><span>Слон в музее</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Megatherium_americanum_skeleton_at_the_Natural_History_Museum%2C_London.jpg?width=900" alt="Скелет мегатерия" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Мегатерий — вымерший ленивец размером со слона</div><div class="fallback"><span class="emoji">🦴</span><span>Скелет мегатерия</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/F.E._Fedulov_and_gorilla_02.jpg?width=900" alt="Федулов в мастерской" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Федулов в таксидермической мастерской</div><div class="fallback"><span class="emoji">🛠️</span><span>Мастерская</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Самые большие вещи в музее — чучела африканского и индийского слонов и реконструкция мегатерия, вымершего ленивца ростом со слона. Все трое стоят на первом этаже, в зале «Многообразие жизни на Земле».</p>
+        <p>Чучело африканского слона мастер Фёдор Федулов собирал в 1927 году. За свою работу он получил орден — и с тех пор в России ни одного таксидермиста так не награждали.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">3</span><span class="ft">В квартире учёных жил настоящий шимпанзе</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/A_juvenile_Chimpanzee_Pan_troglodytes_%28188689971%29.jpg?width=900" alt="Молодой шимпанзе" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Молодой шимпанзе — такого возраста был Иони</div><div class="fallback"><span class="emoji">🐒</span><span>Молодой шимпанзе</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chimpanzee_mom_and_baby.jpg?width=900" alt="Шимпанзе с детёнышем" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Шимпанзе с детёнышем</div><div class="fallback"><span class="emoji">🐵</span><span>Шимпанзе с детёнышем</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chimpanzee_%2837161613913%29.jpg?width=900" alt="Шимпанзе крупным планом" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">У шимпанзе руки почти как у человека</div><div class="fallback"><span class="emoji">🐒</span><span>Шимпанзе</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chimpanzee_2.JPG?width=900" alt="Шимпанзе" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Шимпанзе умеет решать задачи и хитрить</div><div class="fallback"><span class="emoji">🐵</span><span>Шимпанзе</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/N.N.Ladygina-Kots.png?width=900" alt="Надежда Ладыгина-Котс" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Надежда Ладыгина-Котс, первая женщина-зоопсихолог</div><div class="fallback"><span class="emoji">👩‍🔬</span><span>Ладыгина-Котс</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_02.jpg?width=900" alt="Зал музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В залах Дарвиновского музея</div><div class="fallback"><span class="emoji">🏛️</span><span>Зал музея</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>В 1913 году Котс подарил своей жене Надежде полуторагодовалого шимпанзе по имени Иони. Обезьяна поселилась у них в квартире, в отдельной комнате.</p>
+        <p>Надежда Николаевна каждый день записывала, что Иони делает: как играет, обижается, хитрит, чего боится. Из этих записей вышла книга, и учёные всего мира узнали: животные умеют думать — сравнивать и делать выводы.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">4</span><span class="ft">Значок музея — вовсе не улитка</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nautilus_Shell_and_Ammonite_Fossil.jpg?width=900" alt="Аммонит и раковина наутилуса" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Слева раковина, справа окаменевший аммонит</div><div class="fallback"><span class="emoji">🐚</span><span>Аммонит</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fossil_Ammonite_Shell_%28Anapachydiscus_peninsularis%29_-_San_Diego_Natural_History_Museum.jpg?width=900" alt="Окаменелый аммонит" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Аммонит в музее — целая спираль</div><div class="fallback"><span class="emoji">🌀</span><span>Аммонит в музее</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dichotomosphinctes_fossil_ammonite_%28Upper_Jurassic%3B_Moronodova%2C_western_Madagascar%29_%2815053940658%29.jpg?width=900" alt="Аммонит юрского периода" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Этому аммониту около 150 миллионов лет</div><div class="fallback"><span class="emoji">🌀</span><span>Аммонит</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ammonite_fossil_with_in-situ_aptychi_%28Solnhofen_Limestone%2C_Upper_Jurassic%3B_Bavaria%2C_Germany%29_1_%2836800705542%29.jpg?width=900" alt="Аммонит в камне" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Аммонит лежит в камне, как в футляре</div><div class="fallback"><span class="emoji">🪨</span><span>Аммонит в камне</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Placenticeras_sp._%28fossil_ammonite%29_%28Pierre_Shale%2C_Upper_Cretaceous%3B_Meade_County%2C_South_Dakota%2C_USA%29_4.jpg?width=900" alt="Перламутровый аммонит" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Иногда раковина сохраняет перламутровый блеск</div><div class="fallback"><span class="emoji">✨</span><span>Блестящий аммонит</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Baculites_ovatus_%28fossil_ammonite%29_%28Cretaceous%29.jpg?width=900" alt="Прямой аммонит" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">А этот родственник аммонитов вырос почти прямым</div><div class="fallback"><span class="emoji">🐚</span><span>Прямой аммонит</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Многие думают, что на значке музея нарисована улитка. На самом деле это аммонит — вымерший морской моллюск с закрученной раковиной, родственник осьминога и кальмара.</p>
+        <p>Спираль выбрали не случайно: сотрудники музея считают, что жизнь на Земле развивается по спирали. Эту же спираль ты увидишь на ограде и на входе — с неё и начнётся твоё дело.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">5</span><span class="ft">Здесь собраны звери «неправильного» цвета</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Albino_Squirrel_-_geograph.org.uk_-_5634778.jpg?width=900" alt="Белка-альбинос" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Белка-альбинос — совершенно белая</div><div class="fallback"><span class="emoji">🐿️</span><span>Белка-альбинос</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Albino_squirrel_Minneapolis%2C_MN_%283%29.jpg?width=900" alt="Белая белка" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">У настоящих альбиносов даже глаза розовые</div><div class="fallback"><span class="emoji">🐿️</span><span>Белая белка</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Albino_Grey_Squirrel_at_the_British_Wildlife_Centre_-_geograph.org.uk_-_2998220.jpg?width=900" alt="Белка-альбинос в парке" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В лесу такую белку видно издалека — и это опасно</div><div class="fallback"><span class="emoji">🌳</span><span>Белка в парке</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vulpes_vulpes_colour_variations.jpg?width=900" alt="Разные окраски лисы" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Одна и та же лиса бывает рыжей, чёрной и серебристой</div><div class="fallback"><span class="emoji">🦊</span><span>Окраски лисы</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vulpes_vulpes_-Dartmoor_Zoo%2C_Plymouth%2C_Devon%2C_England_-silver_morph-8a.jpg?width=900" alt="Серебристая лиса" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Серебристо-чёрная лиса</div><div class="fallback"><span class="emoji">🦊</span><span>Серебристая лиса</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vulpes_vulpes_%28melanistic%29_in_Dierenpark_Zie-ZOO.jpg?width=900" alt="Чёрная лиса" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Меланист — зверь, у которого слишком много чёрного</div><div class="fallback"><span class="emoji">🖤</span><span>Чёрная лиса</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/White_Tiger_in_Touroparc.jpg?width=900" alt="Белый тигр" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Белый тигр — тоже редкая окраска</div><div class="fallback"><span class="emoji">🐯</span><span>Белый тигр</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Georgian_white_fox.jpg?width=900" alt="Белая лиса" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Белая лиса — почти невидимка на снегу</div><div class="fallback"><span class="emoji">❄️</span><span>Белая лиса</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>В Дарвиновском музее — одна из самых больших в мире коллекций животных со странной окраской: белых альбиносов и чёрных меланистов. Белка-альбинос, чёрно-бурая лиса, белый песец — все они стоят на втором этаже, в зале «Микроэволюция».</p>
+        <p>Альбинос рождается совсем без красящего вещества, поэтому он белый, а глаза у него розовые: сквозь них просвечивают сосуды. Меланист — наоборот, чёрный, потому что краски слишком много.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">6</span><span class="ft">Стены зала превращаются в экран длиной 34 метра</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_03.jpg?width=900" alt="Зал музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Зал, стены которого становятся экраном</div><div class="fallback"><span class="emoji">🏛️</span><span>Зал музея</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D1%8D%D0%BA%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F._2021_04.jpg?width=900" alt="Экспозиция музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Витрины основной экспозиции</div><div class="fallback"><span class="emoji">🏛️</span><span>Витрины</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_037.JPG?width=900" alt="В залах Дарвиновского музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В залах Дарвиновского музея</div><div class="fallback"><span class="emoji">🏛️</span><span>В залах музея</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_041.JPG?width=900" alt="В залах Дарвиновского музея" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В залах Дарвиновского музея</div><div class="fallback"><span class="emoji">🏛️</span><span>В залах музея</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Coral_reef_PloS.jpg?width=900" alt="Коралловый риф" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">В фильме показывают и морскую глубину</div><div class="fallback"><span class="emoji">🐠</span><span>Коралловый риф</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_mammoth.jpg?width=900" alt="Мамонт" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">И тех, кто вымер миллионы лет назад</div><div class="fallback"><span class="emoji">🦣</span><span>Мамонт</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>В зале «Многообразие жизни на Земле» есть шоу «Живая планета». Свет гаснет, и стены превращаются в панорамный экран длиной 34 метра — картинка занимает 200 квадратных метров.</p>
+        <p>За 20 минут перед тобой проносится вся история жизни: 4,5 миллиарда лет. Шоу бесплатное, но показывают его только в выходные, в 16:00 — с классом в будний день ты его не застанешь.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">7</span><span class="ft">Во дворе музея живут шестеро древних</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Life_reconstruction_of_Amurosaurus_riabinini.png?width=900" alt="Амурозавр" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Амурозавр — 12 метров, ел растения</div><div class="fallback"><span class="emoji">🦕</span><span>Амурозавр</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kileskus_aristotocus.jpg?width=900" alt="Килеск" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Килеск — хищник длиной 5 метров, найден в Сибири</div><div class="fallback"><span class="emoji">🦖</span><span>Килеск</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Estemmenosuchus_mirabilis.jpg?width=900" alt="Эстемменозух" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Эстемменозух — «венценосный ящер» с рогами на голове</div><div class="fallback"><span class="emoji">🐗</span><span>Эстемменозух</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Panderichthys_BW.jpg?width=900" alt="Пандерихтис" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Пандерихтис — рыба, которая уже почти умела ползать</div><div class="fallback"><span class="emoji">🐟</span><span>Пандерихтис</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mastodonsaurus_DB.jpg?width=900" alt="Мастодонзавр" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Мастодонзавр — гигантская древняя амфибия</div><div class="fallback"><span class="emoji">🐸</span><span>Мастодонзавр</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_mammoth_model_Royal_BC_Museum_in_Victoria.jpg?width=900" alt="Мамонт в натуральную величину" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Мамонт в натуральную величину</div><div class="fallback"><span class="emoji">🦣</span><span>Мамонт</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/GinkgoLeaves.jpg?width=900" alt="Листья гинкго" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Гинкго — дерево, которое росло ещё при динозаврах</div><div class="fallback"><span class="emoji">🍃</span><span>Гинкго</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cyathea_Tree_Fern_%287113325905%29.jpg?width=900" alt="Древовидный папоротник" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Папоротники тоже застали динозавров</div><div class="fallback"><span class="emoji">🌿</span><span>Папоротник</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>С 2015 года во дворе музея стоит Палеопарк — шесть фигур в натуральную величину: амурозавр, килеск, эстемменозух, пандерихтис, мастодонзавр и мамонт. Все они не выдуманные: кости каждого находили на территории России.</p>
+        <p>Между фигурами специально посадили гинкго и папоротники — растения, которые росли ещё при динозаврах. Получается двор, в котором время перепуталось.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">8</span><span class="ft">У крокодила есть язык, только он приклеен</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nile_crocodile_in_Chobe_National_Park_01.jpg?width=900" alt="Нильский крокодил" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Нильский крокодил — один из самых больших</div><div class="fallback"><span class="emoji">🐊</span><span>Нильский крокодил</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/West_African_crocodile_%28Crocodylus_suchus%29_with_open_mouth_in_Jos_Wildlife_Park_03.jpg?width=900" alt="Крокодил с открытой пастью" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Пасть открыта, а языка будто и нет</div><div class="fallback"><span class="emoji">🐊</span><span>Открытая пасть</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/West_African_crocodile_%28Crocodylus_suchus%29_with_open_mouth_in_Jos_Wildlife_Park_01.jpg?width=900" alt="Крокодил греется с открытым ртом" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Так крокодилы охлаждаются — как собака</div><div class="fallback"><span class="emoji">☀️</span><span>Крокодил греется</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/A_Nile_Crocodile_Basks_along_The_Banks_of_River_Nile.jpg?width=900" alt="Крокодил на берегу" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Крокодил на берегу Нила</div><div class="fallback"><span class="emoji">🏞️</span><span>Крокодил на берегу</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nile_crocodile_lying_on_rock_with_mouth_open_-_DPLA_-_7168301f08db2c821ddc2b4ccdcfdbb2.jpg?width=900" alt="Крокодил на камне" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Крокодил лежит на камне с открытой пастью</div><div class="fallback"><span class="emoji">🪨</span><span>Крокодил на камне</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Посетители музея часто спрашивают: почему у огромного нильского крокодила нет языка? Хранители отвечают: язык есть, просто у крокодилов он по всей длине прирастает ко дну рта.</p>
+        <p>Поэтому высунуть язык крокодил не может, даже если очень захочет. Проверь это сам, когда найдёшь его в зале.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- ============ 02 ИГРЫ ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">02</span> Тренировка инспектора</div>
+  <h2>Две задачи перед выездом</h2>
+  <p class="sub">Реши обе — и получишь значок 🎮</p>
+
+  <div class="game" data-badge-src="game">
+    <div class="prompt">Шифр палеонтолога. Расшифруй слово: ▲ ● ▲ ★ ◆ ■</div>
+    <div class="cipher">▲ = М &nbsp;·&nbsp; ● = А &nbsp;·&nbsp; ★ = О &nbsp;·&nbsp; ◆ = Н &nbsp;·&nbsp; ■ = Т</div>
+    <div class="opts">
+      <div class="opt word">МОЛОТОК</div>
+      <div class="opt word" data-correct="1">МАМОНТ</div>
+      <div class="opt word">МАНДАРИН</div>
+    </div>
+    <div class="answer">Точно! ▲●▲★◆■ — это МАМОНТ. Он стоит во дворе музея, в Палеопарке, и он в натуральную величину. 🦣</div>
+  </div>
+
+  <div class="game" data-badge-src="game">
+    <div class="prompt">В Палеопарке шесть древних зверей, и кости каждого нашли в России. Кто сюда попал по ошибке?</div>
+    <div class="opts">
+      <div class="opt lbl">🦣<small>мамонт</small></div>
+      <div class="opt lbl">🦖<small>килеск</small></div>
+      <div class="opt lbl">🐟<small>пандерихтис</small></div>
+      <div class="opt lbl" data-correct="1">👑<small>тираннозавр</small></div>
+    </div>
+    <div class="answer">Верно, инспектор! Тираннозавра в Палеопарке нет: его находят в Северной Америке, а не у нас. Зато его дальний родственник тарбозавр ждёт тебя на третьем этаже.</div>
+  </div>
+</section>
+
+<!-- ============ 03 ПЛАН ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">03</span> Маршрут</div>
+  <h2>План приключения</h2>
+  <p class="sub">Класс поведут по своему маршруту — но если знаешь план, ничего не пропустишь.</p>
+  <div class="card">
+    <b>Где:</b> Москва, ул. Вавилова, 57.<br>
+    <b>Как доехать:</b> метро «Академическая», выход № 4, дальше 1200 м пешком по улице Дмитрия Ульянова (10–15 минут). Или трамваи 14, 39 и Т1, автобусы 119, 529, 934, 111 — до остановки «Дарвиновский музей».<br>
+    <b>Когда открыт:</b> с 10:00 до 18:00 каждый день, кроме понедельника. Выставочный комплекс по четвергам работает с 13:00 до 21:00.<br>
+    <b>Сколько стоит:</b> школьникам московских школ — бесплатно, билет берут в кассе по карте учащегося; дошкольникам вход бесплатный. Взрослым — по билету; отдельно оплачивается интерактивный центр «Познай себя — познай мир».<br>
+    <b>Сколько длится:</b> вся основная экспозиция — около трёх часов. С классом обычно проходят два-три зала за 1,5–2 часа.<br>
+    <b>Что взять:</b> бутылку воды, перекус и эту страницу (или список квеста на бумажке).
+  </div>
+  <ol class="route">
+    <li class="stop"><span class="dot">1</span><h3>Двор и Палеопарк · 10 минут</h3><p>Ещё до входа: мамонт, амурозавр и остальные четверо. Найди гинкго — дерево времён динозавров.</p></li>
+    <li class="stop"><span class="dot">2</span><h3>1 этаж, «Многообразие жизни на Земле» · 25 минут</h3><p>Слоны, мегатерий, морж, гепард с детёнышами, крокодил. Здесь же по выходным показывают «Живую планету».</p></li>
+    <li class="stop"><span class="dot">3</span><h3>2 этаж, «Микроэволюция» · 25 минут</h3><p>Белка-альбинос, лисы всех цветов, павлин и биогруппа «Волки, нападающие на лося».</p></li>
+    <li class="stop"><span class="dot">4</span><h3>3 этаж, «Макроэволюция» и «Зоогеография» · 25 минут</h3><p>Тарбозавр, утконос, коралловый риф, обезьяна-носач. Самый «динозаврий» этаж.</p></li>
+    <li class="stop"><span class="dot">5</span><h3>Финал: отметить квест</h3><p>Соберёшь все шесть находок — открывай диплом внизу страницы. В музее есть сувенирные киоски: там продаются значки и фигурки.</p></li>
+  </ol>
+  <div class="note" style="margin-top:12px;font-size:13px;color:var(--soft);">Часы работы и цены иногда меняются — родителям стоит сверить их на сайте музея накануне.</div>
+</section>
+
+<!-- ============ 04 СМОТРИ ВНИМАТЕЛЬНО ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">04</span> Экспонаты</div>
+  <h2>Смотри внимательно</h2>
+  <p class="sub">Пять вещей, которые ты встретишь вживую. Рассмотри их поближе — детали важнее общего вида.</p>
+  <div class="facts">
+
+    <details class="fact">
+      <summary><span class="fn">👁</span><span class="ft">Африканский слон · 1 этаж</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Loxodonta_africana_AMNH_Left.jpg?width=900" alt="Чучело африканского слона" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Чучело слона в музейном зале</div><div class="fallback"><span class="emoji">🐘</span><span>Чучело слона</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/African_Bush_Elephant.jpg?width=900" alt="Африканский слон" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Живой африканский слон</div><div class="fallback"><span class="emoji">🐘</span><span>Африканский слон</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Em_-_Loxodonta_africana_agyar_2.jpg?width=900" alt="Бивень слона" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Бивень — это на самом деле огромный зуб</div><div class="fallback"><span class="emoji">🦷</span><span>Бивень слона</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Это один из самых больших экспонатов музея. Его собирали в 1927 году — почти сто лет назад, вручную, из настоящей шкуры, натянутой на каркас.</p>
+        <p style="color:var(--accent-deep);margin-top:8px;"><b>Что заметить:</b> морщины на хоботе и складки на коленях — их мастер прорабатывал отдельно; и уши: у африканского слона они огромные, как географическая карта Африки.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">👁</span><span class="ft">Волки, нападающие на лося · 2 этаж</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wolf_pack_%285062238555%29.jpg?width=900" alt="Стая волков" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Волки охотятся стаей, поодиночке им лося не взять</div><div class="fallback"><span class="emoji">🐺</span><span>Стая волков</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/A_Wolf_In_Winter.jpg?width=900" alt="Волк зимой" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Зимой волк выглядит крупнее из-за густой шерсти</div><div class="fallback"><span class="emoji">❄️</span><span>Волк зимой</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Elk_%28Alces_alces%29_Biebrzanski.jpg?width=900" alt="Лось" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Лось — самый крупный олень, до 600 кг</div><div class="fallback"><span class="emoji">🫎</span><span>Лось</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Moose_in_Grand_Teton_National_Park_3_%288007698498%29.jpg?width=900" alt="Лось с рогами" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Рога лось сбрасывает каждую зиму и отращивает заново</div><div class="fallback"><span class="emoji">🫎</span><span>Рога лося</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Это биогруппа — целая сцена из нескольких чучел сразу, застывшая на середине действия. Посетители музея голосовали за любимые экспонаты, и волки с лосём попали в число победителей.</p>
+        <p style="color:var(--accent-deep);margin-top:8px;"><b>Что заметить:</b> посмотри не на волков, а на ноги лося — он не убегает, он развернулся и защищается. Кто на самом деле в этой сцене сильнее?</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">👁</span><span class="ft">Белка-альбинос · 2 этаж</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Albino_squirrel.jpg?width=900" alt="Белка-альбинос" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Белка-альбинос</div><div class="fallback"><span class="emoji">🐿️</span><span>Белка-альбинос</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Albino_Grey_Squirrel_%287354958138%29.jpg?width=900" alt="Белая белка на дереве" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">На коре её видно за сто метров</div><div class="fallback"><span class="emoji">🌳</span><span>Белая белка</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Squirrel_posing.jpg?width=900" alt="Обычная рыжая белка" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">А так выглядит обычная белка — сравни</div><div class="fallback"><span class="emoji">🐿️</span><span>Рыжая белка</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Белка-альбинос — одна из самых заметных вещей в зале «Микроэволюция». Такие белки рождаются очень редко и в лесу живут недолго: белую видно всем — и ястребу, и кунице.</p>
+        <p style="color:var(--accent-deep);margin-top:8px;"><b>Что заметить:</b> найди рядом обычную рыжую белку и сравни их размер и позу. Отличие только в цвете — всё остальное одинаковое.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">👁</span><span class="ft">Тарбозавр · 3 этаж, зал «Макроэволюция»</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tarbosaurus_bataar_skeleton_in_Mongolian_Natural_History_Museum%2C_Ulanbataar.jpg?width=900" alt="Скелет тарбозавра" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Скелет тарбозавра</div><div class="fallback"><span class="emoji">🦖</span><span>Скелет тарбозавра</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tarbosaurus_skeleton_mount.jpg?width=900" alt="Тарбозавр в музее" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Смонтированный скелет в музее</div><div class="fallback"><span class="emoji">🦴</span><span>Тарбозавр</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tarbosaurus_baatar_skeleton.jpg?width=900" alt="Череп тарбозавра" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Голова тарбозавра — почти как у тираннозавра</div><div class="fallback"><span class="emoji">💀</span><span>Череп</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Тарбозавр — ближайший родственник тираннозавра, только жил он в Азии. Его имя переводится примерно как «пугающий ящер», и посетители музея тоже включили его в список любимых экспонатов.</p>
+        <p style="color:var(--accent-deep);margin-top:8px;"><b>Что заметить:</b> передние лапы. Они смешно маленькие — короче твоей руки, хотя сам зверь размером с автобус. И зубы: они разной длины, как у пилы.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+    <details class="fact">
+      <summary><span class="fn">👁</span><span class="ft">Мамонт в Палеопарке · двор музея</span><span class="chev">▼</span></summary>
+      <div class="fbody">
+        <div class="carousel"><div class="track">
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_Mammoth_-_Horniman_Museum%2C_London.jpg?width=900" alt="Модель мамонта" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Мамонт в натуральную величину</div><div class="fallback"><span class="emoji">🦣</span><span>Мамонт</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mammoth_model_02.JPG?width=900" alt="Мамонт, вид сбоку" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Шерсть у мамонта была до полуметра длиной</div><div class="fallback"><span class="emoji">🦣</span><span>Шерсть мамонта</span></div></div>
+          <div class="slide"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_Mammoth-RBC.jpg?width=900" alt="Бивни мамонта" loading="lazy" onerror="this.closest('.slide').classList.add('noimg')"><div class="cap">Бивни закручены внутрь — ими разгребали снег</div><div class="fallback"><span class="emoji">🦴</span><span>Бивни</span></div></div>
+        </div><button class="cbtn prev" aria-label="Назад">‹</button><button class="cbtn next" aria-label="Вперёд">›</button><div class="dots"></div></div>
+        <p>Мамонт стоит во дворе, под открытым небом, и его можно обойти кругом. Он попал в Палеопарк по праву: кости мамонтов находили даже в самой Москве.</p>
+        <p style="color:var(--accent-deep);margin-top:8px;"><b>Что заметить:</b> бивни закручены внутрь, а не вперёд, как у слона. И горб на спине — там мамонт запасал жир, как верблюд.</p>
+        <button class="speak">🔊 Прочитать вслух</button>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- ============ 05 ИСТОРИЯ ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">05</span> Дело</div>
+  <h2>Дело о пропавшей спирали</h2>
+  <p class="sub">Инспектор Дима приходит в музей раньше класса — и находит пустую витрину.</p>
+
+  <div class="story">
+
+    <article class="chapter">
+      <div class="chn">Глава 1</div>
+      <h3>Пустая витрина</h3>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%97%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5._2021_18.jpg?width=900" alt="Здание Дарвиновского музея" loading="lazy" onerror="this.style.display='none'">
+      <p class="lede">Инспектор Дима вошёл во двор Дарвиновского музея на пятнадцать минут раньше класса. На ограде блестела знакомая спираль — значок музея, аммонит. «Где-то внутри лежит настоящий», — подумал Дима и пошёл искать.</p>
+      <p>Витрину он нашёл на первом этаже. Табличка была на месте: «Аммонит». Подставка была на месте. Аммонита не было. На тёмном бархате остался круглый отпечаток — и три жёлтые песчинки.</p>
+      <p>Дима достал из кармана билет, аккуратно смахнул на него одну песчинку и убрал в карман. Первая улика есть.</p>
+      <p class="hook">🔎 На месте: найди спираль-аммонит на эмблеме музея — она встретится тебе ещё на ограде парка рядом.</p>
+      <button class="speak">🔊 Прочитать вслух</button>
+    </article>
+
+    <article class="chapter">
+      <div class="chn">Глава 2</div>
+      <h3>Дорожка из песчинок</h3>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wikitrip_to_Darwin_Museum_2016-03-03_050.JPG?width=900" alt="Зал Дарвиновского музея" loading="lazy" onerror="this.style.display='none'">
+      <p class="lede">Дима присел на корточки — снизу зал выглядит совсем иначе. По полу тянулась редкая дорожка из таких же жёлтых песчинок. Она уходила мимо белки-альбиноса, мимо лис всех цветов и упиралась в лестницу.</p>
+      <p>На лестнице дорожка раздваивалась: часть песчинок вела вверх, на третий этаж, к тарбозавру, часть — вниз, во двор, к мамонту.</p>
+      <div class="fork">
+        <div class="fq">Как поступишь, инспектор?</div>
+        <div class="opts2">
+          <button>Подняться наверх, к тарбозавру</button>
+          <button>Спуститься во двор, к мамонту</button>
+        </div>
+        <div class="branch">Наверху, под лапой тарбозавра, песчинок стало больше — целая горстка. А ещё в пыли отпечатался круглый след с бороздками. Спираль здесь была. И кто-то её нёс дальше — к окну, которое смотрит во двор.</div>
+        <div class="branch">Во дворе Дима сразу увидел, что песок под ногами точно такой же — жёлтый, из-под фигур Палеопарка. Значит, спираль вынесли наружу. Осталось понять кто — и Дима вернулся в дом, чтобы посмотреть на след сверху, из окна третьего этажа.</div>
+      </div>
+      <p class="hook">🔎 На месте: белка-альбинос и разноцветные лисы — 2 этаж, зал «Микроэволюция». Проверь, правда ли от них видно лестницу.</p>
+      <button class="speak">🔊 Прочитать вслух</button>
+    </article>
+
+    <article class="chapter">
+      <div class="chn">Глава 3</div>
+      <h3>Зубастый свидетель</h3>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tarbosaurus_mount.jpg?width=900" alt="Скелет тарбозавра" loading="lazy" onerror="this.style.display='none'">
+      <p class="lede">Тарбозавр молчал семьдесят миллионов лет и прекращать не собирался. Но Диме и не нужны были слова. Он смотрел на окно за скелетом: форточка была приоткрыта, и на подоконнике лежало серое пёрышко.</p>
+      <p>Дима сложил всё вместе: песок из двора, круглый след, открытая форточка, перо. Спираль унесли не через двери. Её унесли по воздуху.</p>
+      <p>Он посмотрел вниз, во двор, где стоял мамонт, а рядом росло дерево гинкго с листьями-веерами. На верхней ветке что-то тускло блестело.</p>
+      <p class="hook">🔎 На месте: тарбозавр — 3 этаж, зал «Макроэволюция». Посмотри, какие у него маленькие передние лапы.</p>
+      <button class="speak">🔊 Прочитать вслух</button>
+    </article>
+
+    <article class="chapter">
+      <div class="chn">Глава 4</div>
+      <h3>Засада у мамонта</h3>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Woolly_mammoth_model_Royal_BC_Museum_in_Victoria.jpg?width=900" alt="Мамонт в натуральную величину" loading="lazy" onerror="this.style.display='none'">
+      <p class="lede">Дима вышел во двор и спрятался за папоротником, у самой ноги мамонта. Отсюда было видно и гинкго, и форточку третьего этажа.</p>
+      <p>Ждать пришлось недолго. С крыши слетела сорока, села на ветку и деловито поправила клювом свою добычу — закрученную спираль аммонита.</p>
+      <p>Гнаться было бессмысленно: птица улетит выше. И Дима сделал по-другому. Он вытащил из кармана блестящую полоску от билета, положил её на пенёк на самом виду, отошёл на пять шагов и замер.</p>
+      <p class="hook">🔎 На месте: гинкго и папоротники в Палеопарке — их посадили специально: такие росли ещё при динозаврах.</p>
+      <button class="speak">🔊 Прочитать вслух</button>
+    </article>
+
+    <article class="chapter">
+      <div class="chn">Глава 5 · финал</div>
+      <h3>Обмен</h3>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nautilus_Shell_and_Ammonite_Fossil.jpg?width=900" alt="Аммонит" loading="lazy" onerror="this.style.display='none'">
+      <p class="lede">Сорока наклонила голову. Посмотрела на блестящую полоску. Посмотрела на спираль в лапе. Потом ещё раз на полоску…</p>
+      <button class="reveal" onclick="this.nextElementSibling.classList.add('show');document.dispatchEvent(new CustomEvent('gotbadge',{detail:'story'}))">Что было дальше?</button>
+      <div class="answer">Сорока бросила аммонит на траву и схватила полоску от билета — новая блестяшка показалась ей интереснее старой. Дима поднял спираль, обтёр её от песка и отнёс хранителю музея. Тот молча выслушал, вернул аммонит в витрину и снял со своего халата маленький значок с той самой спиралью. «Держи, инспектор. У нас так положено: нашёл — носи». Через десять минут во двор вошёл класс, и никто не понял, почему у Димы на куртке блестит новый значок.</div>
+    </article>
+
+  </div>
+
+  <p class="truth"><b>А что тут правда?</b> Настоящие: аммонит на эмблеме музея, белка-альбинос и разноцветные лисы на 2 этаже, тарбозавр на 3 этаже, Палеопарк во дворе с мамонтом, гинкго и папоротниками. Выдуманные: сорока-воровка и вся пропажа. Кстати, про сорок часто говорят, будто они таскают всё блестящее, — но учёные проверили это опытами, и оказалось, что блестящие штуки сорок скорее пугают. Так что наша сорока — тоже выдумка.</p>
+</section>
+
+<!-- ============ 06 ЧТО ТУТ БЫЛО РАНЬШЕ ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">06</span> История места</div>
+  <h2>Что тут было раньше</h2>
+  <p class="sub">Музею больше ста лет, а свой дом у него появился совсем недавно.</p>
+  <ol class="route years">
+    <li class="stop"><span class="dot">1907</span><h3>Музей начался в учебной аудитории</h3><p>Александр Котс привёз свою домашнюю коллекцию чучел на Высшие женские курсы, где преподавал. Перед лекцией он расставлял чучела прямо на столах — так и получился первый в мире музей эволюции.</p><span class="then">👀 Осталось до сих пор: первые чучела, которые Котс собирал сам, стоят в основной экспозиции.</span></li>
+    <li class="stop"><span class="dot">1913</span><h3>Пять писем Дарвина и один шимпанзе</h3><p>Котс с женой поехали за границу и купили для музея экспонаты, книги и пять подлинных писем Чарльза Дарвина. В том же году в их квартире поселился шимпанзе Иони.</p><span class="then">👀 Осталось до сих пор: книги, которые Котс покупал больше ста лет назад, до сих пор хранятся в библиотеке музея.</span></li>
+    <li class="stop"><span class="dot">1918</span><h3>Бумага, которая спасла коллекцию</h3><p>Время было тяжёлое, залы не топили, а сотрудники всё равно приходили работать. Тогда музею выдали охранную грамоту — документ о том, что коллекция очень ценная и трогать её нельзя. Бумага сработала.</p><span class="then">👀 Осталось до сих пор: экспонаты тех лет целы — их как раз и защитила та грамота.</span></li>
+    <li class="stop"><span class="dot">1927</span><h3>Собрали слона</h3><p>Мастер Фёдор Федулов вместе с Котсом смонтировал чучело африканского слона. Федулов проработал в музее больше сорока лет и сделал больше тысячи экспонатов.</p><span class="then">👀 Осталось до сих пор: тот самый слон стоит на 1 этаже — его ты увидишь своими глазами.</span></li>
+    <li class="stop"><span class="dot">1974<br>—1995</span><h3>Дом строили дольше, чем ты живёшь</h3><p>Здание на улице Вавилова начали строить в 1974 году по проекту архитектора Игоря Бартошевича. Стройка тянулась двадцать с лишним лет, и только в 1995-м музей наконец переехал в свои стены — через 88 лет после основания.</p><span class="then">👀 Осталось до сих пор: само здание из красного кирпича, в которое вы войдёте.</span></li>
+    <li class="stop"><span class="dot">2015</span><h3>Во дворе поселились древние</h3><p>Музей превратил зелёный дворик в Палеопарк: дорожки, лавочки, шесть фигур в натуральную величину и растения времён динозавров.</p><span class="then">👀 Осталось до сих пор: мамонт, амурозавр, килеск, эстемменозух, пандерихтис, мастодонзавр — все шестеро на месте.</span></li>
+    <li class="stop"><span class="dot">2017</span><h3>Рядом открыли парк</h3><p>По соседству появился парк «Академический» — больше 16 гектаров с холмами, площадками и стадионом. Вход украсили фигурами древних животных, будто сбежавших из музея.</p><span class="then">👀 Осталось до сих пор: эмблема музея — аммонит — красуется на ограде парка.</span></li>
+  </ol>
+  <div class="card"><b>Самая странная история этого места:</b> посетители годами спорили, почему у огромного крокодила в зале «нет языка», и придумывали объяснения одно другого страннее. Разгадка скучнее и интереснее любой байки: язык есть, но у крокодилов он прирастает ко дну рта по всей длине. Это правда, а не легенда — так отвечают сами хранители музея.</div>
+</section>
+
+<!-- ============ 07 КВЕСТ ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">07</span> Квест</div>
+  <h2>Найди это на месте</h2>
+  <p class="sub">Шесть находок. Нашёл — жми кружок. Соберёшь все — получишь значок 🔍</p>
+  <div class="facts" data-badge-src="quest">
+    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Спираль-аммонит</b> — эмблема музея. Она есть у входа и на ограде парка рядом.</span></label>
+    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Африканский слон</b> — 1 этаж. Сосчитай, во сколько раз он выше тебя.</span></label>
+    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Белка-альбинос</b> — 2 этаж, зал «Микроэволюция». Совершенно белая.</span></label>
+    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Волки, нападающие на лося</b> — 2 этаж. Найди, кто из них стоит спиной к тебе.</span></label>
+    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Тарбозавр</b> — 3 этаж, зал «Макроэволюция». Сравни его передние лапы со своими руками.</span></label>
+    <label class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer;"><input type="checkbox" class="questbox" style="width:22px;height:22px;accent-color:var(--accent);"><span><b>Мамонт и дерево гинкго</b> — двор, Палеопарк. Лист гинкго похож на веер.</span></label>
+  </div>
+</section>
+
+<!-- ============ 08 ЧТО РЯДОМ ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">08</span> Рядом</div>
+  <h2>Что ещё рядом</h2>
+  <p class="sub">Если останутся силы — всё это в пяти минутах от музея.</p>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Academic_District%2C_Moscow%2C_Russia_-_panoramio_%28106%29.jpg?width=900" alt="Академический район Москвы" loading="lazy" onerror="this.style.display='none'"><b>Парк «Академический»</b> — больше 16 гектаров прямо по соседству: холмы, детские и спортивные площадки, стадион с беговой дорожкой. Открыли его в 2017 году, а вход украсили фигурами древних животных. На ограде — эмблема музея, тот самый аммонит.</div>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%94%D0%B0%D1%80%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9._%D0%97%D0%B4%D0%B0%D0%BD%D0%B8%D1%8F_2021_09.jpg?width=900" alt="Территория Дарвиновского музея" loading="lazy" onerror="this.style.display='none'"><b>Палеопарк и экологическая тропа</b> — во дворе самого музея, выходить никуда не надо. Шесть древних зверей в натуральную величину и живая коллекция деревьев и трав, по которой можно пройти как по маленькому лесу.</div>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A3%D0%BB%D0%B8%D1%86%D0%B0_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D1%8F_%D0%A3%D0%BB%D1%8C%D1%8F%D0%BD%D0%BE%D0%B2%D0%B0_%28%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%29.jpg?width=900" alt="Улица Дмитрия Ульянова" loading="lazy" onerror="this.style.display='none'"><b>Дорога от метро «Академическая»</b> — 1200 метров по улице Дмитрия Ульянова, 10–15 минут пешком. У музея есть аудиогид про историю района: можно слушать прямо по пути.</div>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Moscow%2C_Vavilova_street%2C_trams_Apr_2026_05.jpg?width=900" alt="Трамваи на улице Вавилова" loading="lazy" onerror="this.style.display='none'"><b>Трамвайная остановка «Дарвиновский музей»</b> — на улице Вавилова. Сюда приходят трамваи 14, 39 и Т1. Если повезёт, увидишь новый трамвай «Витязь».</div>
+</section>
+
+<!-- ============ 09 АФИША ============ -->
+<section class="wrap">
+  <div class="tag"><span class="num">09</span> Афиша</div>
+  <h2>Что сейчас интересного</h2>
+  <p class="sub">Прямо в эти недели в музее идёт вот что — можно вернуться в выходные с родителями.</p>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wolf-winter-hunting-snow-trees_-_West_Virginia_-_ForestWander.jpg?width=900" alt="Волк в зимнем лесу" loading="lazy" onerror="this.style.display='none'"><b>Выставка «Белый клык»</b> · до 1 ноября 2026 — про волков и собак, тех самых, что в книжке Джека Лондона. 27 сентября на выставке проходит тематическая программа «Зов предков».</div>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Indian_Peafowl_on_Display.jpg?width=900" alt="Павлин распустил хвост" loading="lazy" onerror="this.style.display='none'"><b>«От когтей до кончиков волос»</b> · до 15 ноября 2026 — выставка про кератин: из него сделаны когти, перья, рога и твои волосы. 13 сентября здесь идёт программа «Сила кератина».</div>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brown_bear_cub_head.jpg?width=900" alt="Медвежонок" loading="lazy" onerror="this.style.display='none'"><b>Квест с ведущим «Медвежий праздник»</b> · 9 и 30 октября 2026 — как раз для возраста 7–10 лет. Настоящий квест по залам, а не просто экскурсия. Билеты — заранее, мест мало.</div>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Amurosaurus-v3.jpg?width=900" alt="Амурозавр" loading="lazy" onerror="this.style.display='none'"><b>Выставка «Мой любимый динозавр»</b> · с 6 октября до 13 декабря 2026 — рисунки палеоиллюстратора, который рисует динозавров для самого музея.</div>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/J%C3%A4rv1.jpg?width=900" alt="Росомаха" loading="lazy" onerror="this.style.display='none'"><b>Новинка: чучело росомахи</b> · с 1 сентября 2026 — совсем свежий экспонат. Росомаха размером с собаку, но отбирает добычу даже у волков.</div>
+  <div class="card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%D0%9D%D0%BE%D1%87%D1%8C_%D0%BC%D1%83%D0%B7%D0%B5%D0%B5%D0%B2_-_panoramio.jpg?width=900" alt="Дарвиновский музей" loading="lazy" onerror="this.style.display='none'"><b>Московская музейная неделя</b> · 18 сентября, 16 октября, 13 ноября, 18 декабря 2026 — дни, когда музеи города можно посетить бесплатно. Обычно нужна регистрация заранее.</div>
+  <div class="note" style="margin-top:14px;font-size:13px;color:var(--soft);">Даты и билеты меняются — сверьтесь на сайте музея darwinmuseum.ru накануне.</div>
+</section>
+
+<!-- ============ РОДИТЕЛЮ ============ -->
+<section class="wrap">
+  <details class="parent">
+    <summary>👩‍👦 Для родителя — вопросы и практика</summary>
+    <p><b>О чём спросить Диму после поездки:</b> «Кого ты нашёл из шести квестовых находок?», «Что оказалось больше, чем ты думал?», «Если бы ты придумывал седьмую фигуру для Палеопарка — кто бы это был?»</p>
+    <p><b>Что показать, если поедете вдвоём:</b> шоу «Живая планета» — бесплатное, но только в выходные в 16:00, зал «Многообразие жизни на Земле». Интерактивный центр «Познай себя — познай мир» — по отдельному билету. Есть цифровой планетарий и 3D-фильмы про динозавров.</p>
+    <p><b>Практика:</b> школьникам московских школ вход бесплатный — билет берут в кассе по карте учащегося. Основная экспозиция целиком — это около трёх часов; сотрудники музея сами советуют с ребёнком выбирать не больше трёх залов. В музее есть кафе, зоны отдыха и сувенирные киоски. Парковка на 45 мест, въезд с улицы Вавилова.</p>
+    <p><b>Про шум:</b> в залах с классом бывает громко, а Дима от шума быстро устаёт. Двор с Палеопарком — тихое место рядом, туда удобно выйти и отдышаться.</p>
+  </details>
+</section>
+
+<!-- ============ ФИНАЛ ============ -->
+<section class="wrap" style="text-align:center;">
+  <div class="game" data-badge-src="finish">
+    <div class="prompt">🏅 Удостоверение инспектора: Дмитрий</div>
+    <p class="sub" style="margin:0;">Факты прочитаны, дело раскрыто, находки собраны — жми кнопку.</p>
+    <button class="reveal" onclick="this.nextElementSibling.classList.add('show');document.dispatchEvent(new CustomEvent('gotbadge',{detail:'finish'}))">Закрыть дело</button>
+    <div class="answer">Дело закрыто. Инспектор Дима, отдел странных находок. Спираль на месте. 🌀</div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="stamp">Нашёл — носи</div>
+  <div>Хорошего приключения, Дима!</div>
+</footer>
+
+<script>
+  /* ---- Карусели: стрелки + точки + свайп ---- */
+  document.querySelectorAll('.carousel').forEach(function(car){
+    var track=car.querySelector('.track'), slides=[].slice.call(track.children), dots=car.querySelector('.dots');
+    slides.forEach(function(_,i){var d=document.createElement('i');if(!i)d.className='on';d.onclick=function(){slides[i].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});};dots.appendChild(d);});
+    function upd(){var idx=Math.round(track.scrollLeft/track.clientWidth);[].forEach.call(dots.children,function(d,i){d.className=i===idx?'on':'';});}
+    track.addEventListener('scroll',function(){window.requestAnimationFrame(upd);});
+    car.querySelector('.prev').onclick=function(){track.scrollBy({left:-track.clientWidth,behavior:'smooth'});};
+    car.querySelector('.next').onclick=function(){track.scrollBy({left:track.clientWidth,behavior:'smooth'});};
+  });
+
+  /* ---- Озвучка (offline, встроена в браузер) ---- */
+  document.querySelectorAll('.speak').forEach(function(b){
+    b.onclick=function(){
+      var ps=b.parentElement.querySelectorAll(':scope>p:not(.hook)');
+      var txt=[].map.call(ps,function(x){return x.textContent;}).join(' ');
+      if(!('speechSynthesis' in window)){b.textContent='🔇 недоступно';return;}
+      speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(txt);u.lang='ru-RU';u.rate=.95;speechSynthesis.speak(u);
+    };
+  });
+
+  /* ---- Развилки в истории: выбор ветки ---- */
+  document.querySelectorAll('.fork').forEach(function(fork){
+    var btns=fork.querySelectorAll('.opts2 button'), brs=fork.querySelectorAll('.branch');
+    btns.forEach(function(b,i){
+      b.onclick=function(){
+        btns.forEach(function(x){x.classList.remove('picked');});
+        brs.forEach(function(x){x.classList.remove('show');});
+        b.classList.add('picked');
+        if(brs[i])brs[i].classList.add('show');
+      };
+    });
+  });
+
+  /* ---- Мини-игра «выбери правильный» ---- */
+  document.querySelectorAll('.game .opts').forEach(function(opts){
+    opts.querySelectorAll('.opt').forEach(function(o){
+      o.onclick=function(){
+        if(o.dataset.correct){o.classList.add('right');opts.parentElement.querySelector('.answer').classList.add('show');
+          document.dispatchEvent(new CustomEvent('gotbadge',{detail:opts.parentElement.dataset.badgeSrc}));}
+        else{o.classList.add('wrong');}
+      };
+    });
+  });
+
+  /* ---- Прогресс и бейджи (localStorage с фолбэком в память) ---- */
+  var KEY='adv:'+location.pathname, store;
+  try{store=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){store={};}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+  function grant(id){if(!id||store[id])return;store[id]=1;save();paint();}
+  function paint(){document.querySelectorAll('#badges .badge').forEach(function(b){if(store[b.dataset.badge])b.classList.add('got');});}
+  document.addEventListener('gotbadge',function(e){grant(e.detail);});
+  // факты: открыл все — бейдж
+  (function(){var box=document.querySelector('[data-badge-src="facts"]');if(!box)return;var f=box.querySelectorAll('.fact');var seen={};f.forEach(function(d){d.addEventListener('toggle',function(){if(d.open){seen[[].indexOf.call(f,d)]=1;if(Object.keys(seen).length>=f.length)grant('facts');}});});})();
+  // квест: отметил все галочки — бейдж
+  (function(){var box=document.querySelector('[data-badge-src="quest"]');if(!box)return;var c=box.querySelectorAll('.questbox');c.forEach(function(x){x.addEventListener('change',function(){if([].every.call(c,function(y){return y.checked;}))grant('quest');});});})();
+  paint();
+</script>
+</body>
+</html>
